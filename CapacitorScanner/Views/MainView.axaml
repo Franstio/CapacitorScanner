@@ -2,10 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:CapacitorScanner.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"             xmlns:vm="clr-namespace:CapacitorScanner.ViewModels"
+			 xmlns:cc="clr-namespace:CapacitorScanner.Controls"
+			 x:DataType="vm:MainViewModel"
              x:Class="CapacitorScanner.Views.MainView"
-             x:DataType="vm:MainViewModel">
+			>
   <Design.DataContext>
     <!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
@@ -27,7 +28,7 @@
 				</Grid>
 			</Grid>
 			<Grid DockPanel.Dock="Top" Background="#a9d18e"  ColumnDefinitions="90*,10*" RowDefinitions="auto">
-				<Label FontFamily="Century Gothic" FontSize="30" Foreground="#3e5d28">Station - Type</Label>
+				<Label FontFamily="Century Gothic" FontSize="30" Foreground="#3e5d28" Content="{Binding StationName}"  />
 
 				<Label FontFamily="Century Gothic" FontSize="30" Foreground="#3e5d28" Grid.Column="1">Name</Label>
 			</Grid>
@@ -37,7 +38,7 @@
 						<Border  BorderBrush="Black"
 							BorderThickness="1"
 							CornerRadius="3" >
-							<StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+							<WrapPanel Orientation="Horizontal" Margin="0,10,0,0">
 								<ScrollViewer  VerticalScrollBarVisibility="Auto"  HorizontalScrollBarVisibility="Auto">
 									<ItemsRepeater  ItemsSource="{ Binding Bins}">
 										<ItemsRepeater.Layout>
@@ -45,39 +46,17 @@
 										</ItemsRepeater.Layout>
 										<ItemsRepeater.ItemTemplate>
 											<DataTemplate>
-												<Border BorderBrush="Black"
-											BorderThickness="2"
-											CornerRadius="3"
-											Background="Gold"
-											Height="200"
-											Padding="20">
-													<StackPanel Spacing="10" VerticalAlignment="Top" >
-														<Border Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="3" >
-															<Label FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold" Foreground="Black"  HorizontalAlignment="Center" Content="{Binding WasteType}" ></Label>
-														</Border>
-
-														<Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Background="#a9d18e">
-															<TextBlock FontWeight="Bold" Padding="10,0,0,0" FontFamily="Century Gothic" FontSize="15" Foreground="#3e5d28" Text="{Binding Weight, StringFormat='{}{0} Kg'}"></TextBlock>
-														</Border>
-														<ProgressBar Height="50" FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold" Foreground="Green"
-															Minimum="0" Maximum="100" Value="{Binding Percentage}" 
-															ShowProgressText="True"/>
-														<Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Background="#ffff8e">
-															<Label FontWeight="Bold" FontFamily="Century Gothic" FontSize="15" HorizontalAlignment="Center" Foreground="#3e5d28" Content="{Binding Name}" ></Label>
-														</Border>
-
-													</StackPanel>
-												</Border>
+												<cc:BinControl Bin="{Binding .}"/>
 											</DataTemplate>
 										</ItemsRepeater.ItemTemplate>
 									</ItemsRepeater>
 								</ScrollViewer>
-							</StackPanel>
+							</WrapPanel>
 						</Border>
 
 						<StackPanel Grid.Column="1" Margin="50,0,0,0" Spacing="5">
 							<Label Background="#9dc3e6" Padding="10" FontFamily="Century Gothic" FontSize="30" Foreground="Black"  FontWeight="Bold" >Scan Badge ID</Label>
-							<TextBox FontFamily="Century Gothic" FontSize="30" Background="White"/>
+							<TextBox BorderBrush="Black" BorderThickness="3" FontFamily="Century Gothic" FontSize="30" Background="White"/>
 							<Label FontFamily="Century Gothic" FontSize="30" Foreground="Black" FontWeight="Bold">User: ...</Label>
 							<Label FontFamily="Century Gothic" FontSize="30" Foreground="Black" FontWeight="Bold">Type: ...</Label>
 							<Label FontFamily="Century Gothic" FontSize="30" Foreground="Black" FontWeight="Bold">Weight: ...</Label>
