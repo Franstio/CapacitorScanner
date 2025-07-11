@@ -17,6 +17,8 @@ public partial class MainViewModel : ViewModelBase
     public ObservableCollection<BinModel> Bins { get; set; } = [];
     [ObservableProperty]
     private string stationName  = "Station - Type";
+    [ObservableProperty]
+    private string machineName = "NAME";
 
     
     public MainViewModel()
@@ -27,6 +29,7 @@ public partial class MainViewModel : ViewModelBase
             {
                 await LoadBins();
                 StationName = (await GetStationInfo())?.FirstOrDefault()?.description ?? stationName;
+                MachineName = "2-B2-001";
                 await Task.Delay(500);
             }
         });

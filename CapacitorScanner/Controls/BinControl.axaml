@@ -2,8 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="130" d:DesignHeight="200"
 			 xmlns:vm="clr-namespace:CapacitorScanner.ViewModels"
+			 xmlns:cvt="clr-namespace:CapacitorScanner.Converter"
 			 x:DataType="vm:BinControlViewModel"
              x:Class="CapacitorScanner.Controls.BinControl"
              >
@@ -12,9 +13,21 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
 		<vm:BinControlViewModel />
 	</Design.DataContext>
-			
-	
-	<WrapPanel>
+	<UserControl.Resources>
+		<cvt:ProgressBarColorConverter x:Key="ProgressBarColorConverter"/>
+	</UserControl.Resources>
+	<UserControl.Styles>
+		<Style Selector="ProgressBar">
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Grid>
+						<Border Name="PART_Indicator" Background="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ProgressBarColorConverter}}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+	</UserControl.Styles>
+	<WrapPanel Height="200" Width="130">
 		<Border BorderBrush="Black"
 											BorderThickness="2"
 											CornerRadius="3"
@@ -23,17 +36,17 @@
 											Padding="20">
 			<StackPanel Spacing="10" VerticalAlignment="Top" >
 				<Border Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="3" >
-					<TextBlock FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold" Foreground="Black"  HorizontalAlignment="Center" Text="{Binding  $parent[UserControl].Bin.WasteType}" ></TextBlock>
+					<TextBlock FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold" Foreground="Black"  HorizontalAlignment="Center" Text="{Binding  Bin.WasteType,RelativeSource={RelativeSource AncestorType=UserControl}}" ></TextBlock>
 				</Border>
 
 				<Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Background="#a9d18e">
-					<TextBlock FontWeight="Bold" Padding="10,0,0,0" FontFamily="Century Gothic" FontSize="15" Foreground="#3e5d28" Text="{Binding $parent[UserControl].Bin.Weight, StringFormat='{}{0} Kg'}"></TextBlock>
+					<TextBlock FontWeight="Bold" Padding="10,0,0,0" FontFamily="Century Gothic" FontSize="15" Foreground="#3e5d28" Text="{Binding Bin.Weight, StringFormat='{}{0} Kg',RelativeSource={RelativeSource AncestorType=UserControl}}"></TextBlock>
 				</Border>
-				<ProgressBar Width="10" Height="50" FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold" Foreground="Green"
-					Minimum="0" Maximum="100" Value="{Binding $parent[UserControl].Bin.Percentage}"
+				<ProgressBar  Height="30" FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold"  
+					Minimum="0" Maximum="100" Value="{Binding Bin.Percentage,RelativeSource={RelativeSource AncestorType=UserControl}}"
 					ShowProgressText="True"/>
 				<Button ClickMode="Press"   BorderBrush="Black" HorizontalAlignment="Stretch" BorderThickness="1" CornerRadius="3" Background="#ffff8e">
-					<TextBlock FontWeight="Bold" FontFamily="Century Gothic" FontSize="15" HorizontalAlignment="Center" Foreground="#3e5d28" Text="{Binding $parent[UserControl].Bin.Name}" ></TextBlock>
+					<TextBlock FontWeight="Bold" FontFamily="Century Gothic" FontSize="15" HorizontalAlignment="Center" Foreground="#3e5d28" Text="{Binding Bin.Name,RelativeSource={RelativeSource AncestorType=UserControl}}" ></TextBlock>
 				</Button>
 
 			</StackPanel>

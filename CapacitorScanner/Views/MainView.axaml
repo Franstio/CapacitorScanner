@@ -30,7 +30,7 @@
 			<Grid DockPanel.Dock="Top" Background="#a9d18e"  ColumnDefinitions="90*,10*" RowDefinitions="auto">
 				<Label FontFamily="Century Gothic" FontSize="30" Foreground="#3e5d28" Content="{Binding StationName}"  />
 
-				<Label FontFamily="Century Gothic" FontSize="30" Foreground="#3e5d28" Grid.Column="1">Name</Label>
+				<Label FontFamily="Century Gothic" FontSize="30" Foreground="#3e5d28" Grid.Column="1" Content="{Binding MachineName}"/>
 			</Grid>
 			<TabControl Padding="10" VerticalAlignment="Stretch" Margin="5" >
 				<TabItem FontFamily="Century Gothic" FontSize="30"  FontWeight="Bold" Foreground="Black"   Header="Main">

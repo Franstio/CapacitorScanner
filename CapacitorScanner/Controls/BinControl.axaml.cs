@@ -23,6 +23,6 @@ public partial class BinControl : UserControl
     public BinControl()
     {
         InitializeComponent();
-        DataContext = new BinControlViewModel();
+        DataContext = this;
     }
 }
