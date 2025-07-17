@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+			 x:Name="WasteControlRoot"
+			 xmlns:cc="clr-namespace:CapacitorScanner.Controls"
+             x:Class="CapacitorScanner.Controls.WasteControl"
+			 xmlns:bb="clr-namespace:CapacitorScanner.Behaviours;assembly=CapacitorScanner"
+			 xmlns:vm="clr-namespace:CapacitorScanner.ViewModels;assembly=CapacitorScanner"		 
+			 x:DataType="vm:WasteControlViewModel"
+			 xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
+			 xmlns:cvt="clr-namespace:CapacitorScanner.Converter;assembly=CapacitorScanner"
+			 bb:ControlOnLoadBehaviour.OnLoad="{Binding LoadBinsCommand}"
+			 >
+	<UserControl.Resources>
+		<cvt:LabelConverter x:Key="LabelConverter"/>
+		<cvt:WasteModeConverter x:Key="WasteModeConverter"/>
+	</UserControl.Resources>
+	<UserControl.Styles>
+		<StyleInclude Source="/Controls/Styles/BinControlStyles.axaml"/>
+		<Style Selector="Button#buttonMode">
+			<Setter Property="Background" Value="WhiteSmoke"/>
+			<Setter Property="Foreground" Value="Black"/>
+		</Style>
+		<Style Selector="Button#buttonMode:pointerover  /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Gray"/>
+		</Style>
+		<Style Selector="TextBox /template/ Border">
+				
+			<Setter Property="Background" Value="White"/>
+		</Style>
+		<Style Selector="TextBox">
+			<Setter Property="Foreground" Value="Black"/>
+		</Style>
+		<Style Selector="TextBox:focus">
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="Foreground" Value="Black"/>
+		</Style>
+	</UserControl.Styles>
+
+
+	<Grid   ColumnDefinitions="60*,40*" VerticalAlignment="Stretch" >
+		<Border  BorderBrush="Black"
+			BorderThickness="1"
+			CornerRadius="3"
+				 Padding="10">
+			<WrapPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
+				<ScrollViewer  VerticalScrollBarVisibility="Auto"  HorizontalScrollBarVisibility="Auto">
+					<ItemsRepeater  ItemsSource="{ Binding Bins}">
+						<ItemsRepeater.Layout>
+							<UniformGridLayout Orientation="Horizontal" MinColumnSpacing="50" MinRowSpacing="50" ItemsJustification="SpaceBetween" MaximumRowsOrColumns="4" />
+						</ItemsRepeater.Layout>
+						<ItemsRepeater.ItemTemplate>
+							<DataTemplate>
+								<cc:BinItemControl Bin="{Binding}" Container="{Binding DataContext.Container,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" BinCommand="{Binding DataContext.TestClickCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+							</DataTemplate>
+						</ItemsRepeater.ItemTemplate>
+					</ItemsRepeater>
+				</ScrollViewer>
+			</WrapPanel>
+		</Border>
+
+		<StackPanel Grid.Column="1" Margin="50,0,0,0" Spacing="5">
+			<Panel Height="150" Background="#9dc3e6">
+				<TextBlock Text="{Binding Message}" Padding="10"  FontFamily="Century Gothic" FontSize="30" Foreground="Black"  FontWeight="Bold" ></TextBlock>
+			</Panel>
+			<TextBox Name="ScanBox" CaretBrush="Black"  BorderThickness="3" FontFamily="Century Gothic" FontSize="30" Text="{Binding Scan,Mode=TwoWay}">
+				<TextBox.KeyBindings>
+					<KeyBinding Command="{Binding WasteProcessCommand}" Gesture="Enter"/>
+				</TextBox.KeyBindings>
+			</TextBox>
+			<TextBlock FontFamily="Century Gothic" FontSize="30" Foreground="Black" FontWeight="Bold" Text="{Binding User,StringFormat='User: {0}',Converter={StaticResource LabelConverter}}"></TextBlock>
+			<TextBlock FontFamily="Century Gothic" FontSize="30" Foreground="Black" FontWeight="Bold" Text="{Binding Container,StringFormat='Type: {0}',Converter={StaticResource LabelConverter}}"></TextBlock>
+			<TextBlock FontFamily="Century Gothic" FontSize="30" Foreground="Black" FontWeight="Bold">Weight: ...</TextBlock>
+			<Button Name="buttonMode" Command="{Binding ToggleModeCommand}" CornerRadius="3" FontFamily="Century Gothic" FontSize="30" FontWeight="Bold" Foreground="Black" Margin="10" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="{Binding IsAuto,Converter={StaticResource WasteModeConverter}}">
+			</Button>
+		</StackPanel>
+	</Grid>
+</UserControl>

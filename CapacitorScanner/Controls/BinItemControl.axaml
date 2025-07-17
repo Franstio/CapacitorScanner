@@ -1,0 +1,100 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:cvt="clr-namespace:CapacitorScanner.Converter;assembly=CapacitorScanner"
+        xmlns:controls="using:CapacitorScanner.Controls">
+
+	<!--
+    Additional resources 
+    Using Control Themes:
+         https://docs.avaloniaui.net/docs/basics/user-interface/styling/control-themes
+    Using Theme Variants:
+         https://docs.avaloniaui.net/docs/guides/styles-and-resources/how-to-use-theme-variants
+  -->
+	<Design.PreviewWith>
+		<StackPanel Width="150" Height="200" Spacing="10">
+			<StackPanel Background="{DynamicResource SystemRegionBrush}">
+				<controls:BinItemControl />
+			</StackPanel>
+		</StackPanel>
+	</Design.PreviewWith>
+	<cvt:ProgressBarColorConverter x:Key="ProgressBarColorConverter"/>
+	<cvt:ProgressBarWidthConverter x:Key="ProgressBarWidthConverter"/>
+	<ControlTheme x:Key="{x:Type controls:BinItemControl}" TargetType="controls:BinItemControl">
+
+		<Setter Property="Template">
+			<ControlTemplate>
+				<WrapPanel Height="200" Width="150" DataContext="{TemplateBinding Bin}">
+					<WrapPanel.Styles>
+						<Style Selector="Border.headerbin">
+							<Setter Property="Background" Value="White"/>
+						</Style>
+						<Style Selector="Border.headerbin TextBlock">
+							<Setter Property="Foreground" Value="Black"/>
+						</Style>
+						<Style Selector="Button.headerbin:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="Background" Value="LightGreen"/>
+						</Style>
+						<Style Selector="Border.headerbingreen">
+							<Setter Property="Background" Value="Green"/>
+						</Style>
+						<Style Selector="Border.headerbingreen TextBlock">
+							<Setter Property="Foreground" Value="White"/>
+						</Style>
+						<Style Selector="Button.headerbingreen:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="BorderBrush" Value="Black"/>
+							<Setter Property="BorderThickness" Value="1"/>
+							<Setter Property="CornerRadius" Value="3"/>
+							<Setter Property="Background" Value="LightGreen"/>
+						</Style>
+						<Style Selector="Button.headerbinred:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="BorderBrush" Value="Black"/>
+							<Setter Property="BorderThickness" Value="1"/>
+							<Setter Property="CornerRadius" Value="3"/>
+							<Setter Property="Background" Value="Red"/>
+						</Style>
+						<Style Selector="Button.headerbinred:disabled /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="BorderBrush" Value="Black"/>
+							<Setter Property="BorderThickness" Value="1"/>
+							<Setter Property="CornerRadius" Value="3"/>
+							<Setter Property="Background" Value="Red"/>
+						</Style>
+
+						<Style Selector="Button.headerbin:disabled /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="BorderBrush" Value="Black"/>
+							<Setter Property="BorderThickness" Value="1"/>
+							<Setter Property="CornerRadius" Value="3"/>
+							<Setter Property="Background" Value="#ffff8e"/>
+						</Style>
+						
+					</WrapPanel.Styles>
+					<Border BorderBrush="Black"
+							BorderThickness="2"
+							CornerRadius="3"
+							Background="Gold"
+							Height="200"
+							Padding="20">
+						<StackPanel Spacing="10" VerticalAlignment="Top" HorizontalAlignment="Center" >
+							<Border Classes.headerbin="{Binding !BinHeaderClass,RelativeSource={RelativeSource TemplatedParent}}" Classes.headerbingreen="{Binding BinHeaderClass,RelativeSource={RelativeSource TemplatedParent}}"   BorderBrush="Black" BorderThickness="1" CornerRadius="3" >
+								<TextBlock FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold" Foreground="Black"  HorizontalAlignment="Center" Text="{Binding  WasteType}" >
+								</TextBlock>
+							</Border>
+
+							<Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Background="#a9d18e">
+								<TextBlock FontWeight="Bold" Padding="10,0,0,0" FontFamily="Century Gothic" FontSize="15" Foreground="#3e5d28" Text="{Binding Weight, StringFormat='{}{0} Kg'}"></TextBlock>
+							</Border>
+							<ProgressBar  Height="30"   IsIndeterminate="False"  FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold"
+								Minimum="0" Maximum="100" CornerRadius="3"
+										 Value="{Binding Percentage}"
+								ShowProgressText="True"/>
+							<Button IsEnabled="{Binding BinButtonClass,RelativeSource={RelativeSource TemplatedParent}}" Classes.headerbin="{Binding BinGrayClass,RelativeSource={RelativeSource TemplatedParent}}" Classes.headerbingreen="{Binding BinButtonClass,RelativeSource={RelativeSource TemplatedParent}}" Classes.headerbinred="{Binding BinRedClass,RelativeSource={RelativeSource TemplatedParent}}" Command="{TemplateBinding BinCommand}" CommandParameter="{Binding .}" ClickMode="Press"   BorderBrush="Black" HorizontalAlignment="Stretch" BorderThickness="1" CornerRadius="3" Background="#ffff8e">
+								<TextBlock FontWeight="Bold" FontFamily="Century Gothic" FontSize="15" HorizontalAlignment="Center" Foreground="#3e5d28" Text="{Binding Name}" ></TextBlock>
+							</Button>
+
+						</StackPanel>
+					</Border>
+				</WrapPanel>
+			</ControlTemplate>
+		</Setter>
+
+	</ControlTheme>
+</ResourceDictionary>

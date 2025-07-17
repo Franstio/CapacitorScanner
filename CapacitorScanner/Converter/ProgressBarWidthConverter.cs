@@ -1,23 +1,22 @@
 using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
-using Avalonia.Media;
 
 namespace CapacitorScanner.Converter
 {
-    internal class ProgressBarColorConverter : IValueConverter
+    internal class ProgressBarWidthConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is double progress )
-            {
-                if (progress < 60)
-                    return Brushes.Green;
-                else if (progress <  80)
-                    return Brushes.Yellow;
-                return Brushes.Red;
-            }
-            return Brushes.Gray;
+            double val = 1.5;
+            if (value is decimal width)
+                return width / (decimal)val;
+            else if (value is double w)
+                return w / val;
+            else if (value is int w2)
+                return w2 / val;
+            else
+                return val;
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

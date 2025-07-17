@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="clr-namespace:CapacitorScanner.ViewModels;assembly=CapacitorScanner"
+			 x:DataType="vm:LoginViewModel"
+			 xmlns:bb="clr-namespace:CapacitorScanner.Behaviours;assembly=CapacitorScanner"
+			 bb:ControlOnLoadBehaviour.OnLoad="{Binding LoadCommand}"
+             x:Class="CapacitorScanner.Controls.LoginControl">
+	<UserControl.Styles>
+		<Style Selector="TextBlock">
+			<Setter Property="FontFamily" Value="Century Gothic"/>
+			<Setter Property="Foreground" Value="Gray"/>
+			<Setter Property="FontSize" Value="30"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Background" Value="White"/>
+		</Style>
+		<Style Selector="TextBox:pointerover">
+			<Setter Property="Background" Value="Gray"/>
+			<Setter Property="Foreground" Value="Black"/>
+
+		</Style>
+		<Style Selector="TextBox:focus">
+			<Setter Property="Background" Value="WhiteSmoke"/>
+			<Setter Property="Foreground" Value="Black"/>
+			<Setter Property="CaretBrush" Value="Black"/>
+
+		</Style>
+		<Style Selector="TextBox">
+			<Setter Property="CaretBrush" Value="Black"/>
+			<Setter Property="FontFamily" Value="Century Gothic"/>
+			<Setter Property="Foreground" Value="Gray"/>
+			<Setter Property="FontSize" Value="30"/>
+			<Setter Property="BorderThickness" Value="2"/>
+		</Style>
+		<Style Selector="TextBox /template/ Border">
+			<Setter Property="Background" Value="White"/>
+		</Style>
+	</UserControl.Styles>
+	<StackPanel Spacing="10" Margin="10">
+		<Grid ColumnDefinitions="20*,80*" RowDefinitions="auto" >
+			<TextBlock>User</TextBlock>
+			<TextBox HorizontalAlignment="Stretch" Grid.Column="1" Text="{Binding User.username}" ></TextBox>
+		</Grid>
+		<Grid ColumnDefinitions="20*,80*" RowDefinitions="auto" >
+			<TextBlock>Password</TextBlock>
+			<TextBox Grid.Column="1" HorizontalAlignment="Stretch" PasswordChar="*" Text="{Binding User.password}" ></TextBox>
+		</Grid>
+		<Button Background="WhiteSmoke" Command="{Binding LoginCommand}" BorderBrush="Black" Foreground="Black" BorderThickness="2" Padding="20" CornerRadius="3" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">Login</Button>
+	</StackPanel>
+</UserControl>

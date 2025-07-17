@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="130" d:DesignHeight="200"
+             mc:Ignorable="d" d:DesignWidth="150" d:DesignHeight="200"
 			 xmlns:vm="clr-namespace:CapacitorScanner.ViewModels"
 			 xmlns:cvt="clr-namespace:CapacitorScanner.Converter"
 			 x:DataType="vm:BinControlViewModel"
@@ -17,36 +17,29 @@
 		<cvt:ProgressBarColorConverter x:Key="ProgressBarColorConverter"/>
 	</UserControl.Resources>
 	<UserControl.Styles>
-		<Style Selector="ProgressBar">
-			<Setter Property="Template">
-				<ControlTemplate>
-					<Grid>
-						<Border Name="PART_Indicator" Background="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ProgressBarColorConverter}}" />
-					</Grid>
-				</ControlTemplate>
-			</Setter>
-		</Style>
+		<StyleInclude Source="/Controls/Styles/BinControlStyles.axaml" />
 	</UserControl.Styles>
-	<WrapPanel Height="200" Width="130">
+	<WrapPanel Height="200" Width="150" >
 		<Border BorderBrush="Black"
 											BorderThickness="2"
 											CornerRadius="3"
 											Background="Gold"
 											Height="200"
 											Padding="20">
-			<StackPanel Spacing="10" VerticalAlignment="Top" >
+			<StackPanel Spacing="10" VerticalAlignment="Top" HorizontalAlignment="Center" >
 				<Border Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="3" >
-					<TextBlock FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold" Foreground="Black"  HorizontalAlignment="Center" Text="{Binding  Bin.WasteType,RelativeSource={RelativeSource AncestorType=UserControl}}" ></TextBlock>
+					<TextBlock FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold" Foreground="Black"  HorizontalAlignment="Center" Text="{Binding  Bin.WasteType}" ></TextBlock>
 				</Border>
 
 				<Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Background="#a9d18e">
-					<TextBlock FontWeight="Bold" Padding="10,0,0,0" FontFamily="Century Gothic" FontSize="15" Foreground="#3e5d28" Text="{Binding Bin.Weight, StringFormat='{}{0} Kg',RelativeSource={RelativeSource AncestorType=UserControl}}"></TextBlock>
+					<TextBlock FontWeight="Bold" Padding="10,0,0,0" FontFamily="Century Gothic" FontSize="15" Foreground="#3e5d28" Text="{Binding Bin.Weight, StringFormat='{}{0} Kg'}"></TextBlock>
 				</Border>
-				<ProgressBar  Height="30" FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold"  
-					Minimum="0" Maximum="100" Value="{Binding Bin.Percentage,RelativeSource={RelativeSource AncestorType=UserControl}}"
+				<ProgressBar  Height="30"   IsIndeterminate="False"  FontFamily="Century Gothic" FontSize="15"  FontWeight="Bold"
+					Minimum="0" Maximum="100" CornerRadius="3"
+							 Value="{Binding Bin.Percentage}"
 					ShowProgressText="True"/>
-				<Button ClickMode="Press"   BorderBrush="Black" HorizontalAlignment="Stretch" BorderThickness="1" CornerRadius="3" Background="#ffff8e">
-					<TextBlock FontWeight="Bold" FontFamily="Century Gothic" FontSize="15" HorizontalAlignment="Center" Foreground="#3e5d28" Text="{Binding Bin.Name,RelativeSource={RelativeSource AncestorType=UserControl}}" ></TextBlock>
+				<Button Command="{Binding TestClickCommand}" ClickMode="Press"   BorderBrush="Black" HorizontalAlignment="Stretch" BorderThickness="1" CornerRadius="3" Background="#ffff8e">
+					<TextBlock FontWeight="Bold" FontFamily="Century Gothic" FontSize="15" HorizontalAlignment="Center" Foreground="#3e5d28" Text="{Binding Bin.Name}" ></TextBlock>
 				</Button>
 
 			</StackPanel>

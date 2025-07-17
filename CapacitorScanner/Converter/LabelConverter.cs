@@ -1,23 +1,20 @@
 using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
-using Avalonia.Media;
+using CapacitorScanner.API.Model;
+using CapacitorScanner.Model;
 
 namespace CapacitorScanner.Converter
 {
-    internal class ProgressBarColorConverter : IValueConverter
+    internal class LabelConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is double progress )
-            {
-                if (progress < 60)
-                    return Brushes.Green;
-                else if (progress <  80)
-                    return Brushes.Yellow;
-                return Brushes.Red;
-            }
-            return Brushes.Gray;
+            if (value is UserModel userModel)
+                return $"{userModel.employeename}";
+            else if (value is ContainerBinModel container)
+                return $"{container.scraptype_name}";
+            return "...";
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

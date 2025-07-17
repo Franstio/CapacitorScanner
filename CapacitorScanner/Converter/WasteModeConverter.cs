@@ -1,23 +1,16 @@
 using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
-using Avalonia.Media;
 
 namespace CapacitorScanner.Converter
 {
-    internal class ProgressBarColorConverter : IValueConverter
+    internal class WasteModeConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is double progress )
-            {
-                if (progress < 60)
-                    return Brushes.Green;
-                else if (progress <  80)
-                    return Brushes.Yellow;
-                return Brushes.Red;
-            }
-            return Brushes.Gray;
+            if (value is bool mode)
+                return $"Mode: {(mode ? "Auto" : "Manual")}";
+            return new Avalonia.Data.BindingNotification(value);
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

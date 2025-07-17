@@ -13,15 +13,15 @@ namespace CapacitorScanner.ViewModels
     {
         [ObservableProperty]
         BinModel bin = new BinModel();
+        
         public BinControlViewModel()
         {
             
         }
-
         [RelayCommand]
-        async void Click()
+        async void TestClick()
         {
-            await MessageBoxManager.GetMessageBoxStandard("Test", "test").ShowAsync();
+            await MessageBoxManager.GetMessageBoxStandard("Bin Alert", $"Bin {Bin.Name}").ShowAsync();
         }
         
     }

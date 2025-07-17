@@ -1,0 +1,71 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
+			 xmlns:vm="clr-namespace:CapacitorScanner.ViewModels;assembly=CapacitorScanner"
+			 x:DataType="vm:SettingsViewModel"
+			 xmlns:bb="clr-namespace:CapacitorScanner.Behaviours;assembly=CapacitorScanner"
+			 bb:ControlOnLoadBehaviour.OnLoad="{Binding onLoadCommand}"
+             x:Class="CapacitorScanner.Controls.SettingsControl">
+	<UserControl.Styles>
+		<Style Selector="TextBlock">
+			<Setter Property="FontFamily" Value="Century Gothic"/>
+			<Setter Property="Foreground" Value="Gray"/>
+			<Setter Property="FontSize" Value="30"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Background" Value="White"/>
+		</Style>
+		<Style Selector="TextBox:pointerover">
+			<Setter Property="Background" Value="Gray"/>
+			<Setter Property="Foreground" Value="Black"/>
+
+		</Style>
+		<Style Selector="TextBox:focus">
+			<Setter Property="Background" Value="WhiteSmoke"/>
+			<Setter Property="Foreground" Value="Black"/>
+			<Setter Property="CaretBrush" Value="Black"/>
+
+		</Style>
+		<Style Selector="TextBox">
+			<Setter Property="CaretBrush" Value="Black"/>
+			<Setter Property="FontFamily" Value="Century Gothic"/>
+			<Setter Property="Foreground" Value="Gray"/>
+			<Setter Property="FontSize" Value="30"/>
+			<Setter Property="BorderThickness" Value="2"/>
+		</Style>
+		<Style Selector="TextBox /template/ Border">
+			<Setter Property="Background" Value="White"/>
+		</Style>
+	</UserControl.Styles>
+	<StackPanel Spacing="15" Margin="15">
+		<UniformGrid Columns="2" >
+			<TextBlock >API Base URL</TextBlock> 
+			<TextBox Text="{Binding Config.API_URL}"/>
+		</UniformGrid>
+
+		<UniformGrid Columns="2" >
+			<TextBlock >Check User</TextBlock>
+			<TextBox Text="{Binding Config.loginEndpoint}"/>
+		</UniformGrid>
+
+		<UniformGrid Columns="2" >
+			<TextBlock >Station Activity</TextBlock>
+			<TextBox Text="{Binding Config.stationActivity}" />
+		</UniformGrid>
+		<UniformGrid Columns="2" >
+			<TextBlock >View</TextBlock>
+			<TextBox Text="{Binding Config.view}"/>
+		</UniformGrid>
+		<UniformGrid Columns="2" >
+			<TextBlock >Verify Step 2</TextBlock>
+			<TextBox  Text="{Binding Config.verifystep2}"/>
+		</UniformGrid>
+		<UniformGrid Columns="2" >
+			<TextBlock >Hostname</TextBlock>
+			<TextBox Text="{Binding Config.hostname}"/>
+		</UniformGrid>
+		<Button IsEnabled="{Binding IsLogin}" Foreground="Black" CornerRadius="5" Margin="10" Command="{Binding SaveConfigCommand}" Background="WhiteSmoke" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Stretch" Height="50" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">Save</Button>
+	</StackPanel>
+</UserControl>

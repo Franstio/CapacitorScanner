@@ -1,6 +1,9 @@
-﻿using CapacitorScanner.API.Model;
+﻿using Avalonia.Threading;
+using CapacitorScanner.API.Model;
 using CapacitorScanner.Model;
+using CapacitorScanner.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,88 +17,40 @@ namespace CapacitorScanner.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
-    public ObservableCollection<BinModel> Bins { get; set; } = [];
     [ObservableProperty]
     private string stationName  = "Station - Type";
     [ObservableProperty]
     private string machineName = "NAME";
 
-    
-    public MainViewModel()
+    private readonly PIDSGService PIDSGService;
+    private readonly ConfigService ConfigService;
+    [ObservableProperty]
+    private string time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+    public MainViewModel(PIDSGService service,ConfigService configService)
     {
-        _ = Task.Run(async () =>
-        {
-            while (true)
-            {
-                await LoadBins();
-                StationName = (await GetStationInfo())?.FirstOrDefault()?.description ?? stationName;
-                MachineName = "2-B2-001";
-                await Task.Delay(500);
-            }
-        });
+        PIDSGService = service;
+        ConfigService = configService;
+
     }
-    private HttpClient GetHttpClient()
+    [RelayCommand]
+    public async Task LoadStation()
     {
-        HttpClient client = new HttpClient();
-        client.BaseAddress = new System.Uri( $"http://10.89.1.99/api/");
-        return client;
+        StationName = (await PIDSGService.GetStationInfo())?.FirstOrDefault()?.description ?? StationName;
+        MachineName = ConfigService.Config.hostname;
+        DispatcherTimer timer = new DispatcherTimer(),timer2 = new DispatcherTimer();
+        timer.Interval = TimeSpan.FromSeconds(1);
+        timer.Tick += (_, _) => {
+
+            Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+            };
+        timer.Start();
+        timer2.Interval = TimeSpan.FromSeconds(5);
+        timer2.Tick += async (_, _) => {
+            StationName = (await PIDSGService.GetStationInfo())?.FirstOrDefault()?.description ?? StationName;
+            MachineName = ConfigService.Config.hostname;
+        };
+        timer2.Start();
     }
-    private async Task LoadBins()
-    {
-        var data = await GetBins();
-        if (data is null)
-            return;
-        Bins.Clear();
-        foreach (var item in data.Select(x => new BinModel(x.name, x.scraptype_name, x.weightresult, x.capacity)))
-            Bins.Add(item);
-    }
-    private async Task<List<ContainerBinModel>?> GetBins()
-    {
-        using ( var client = GetHttpClient() )
-        {
-            try
-            {
-                var builder = new UriBuilder(client.BaseAddress!);
-                var query = HttpUtility.ParseQueryString(builder.Query);
-                query["object"] = "mwastebin";
-                query["where"] = "wastestation_name=2-B2-001";
-                query["select"] = "name,capacity,description,weightresult,scraptype_name,scrapitem_name";
-                query["orderColumn"] = "name";
-                query["orderSort"] = "asc";
-                builder.Path += "pid/view";
-                builder.Query = query.ToString();
-                var test = await client.GetStringAsync(builder.ToString());
-                var data = await client.GetFromJsonAsync<PayloadModel<ContainerBinModel>>(builder.ToString());
-                return data?.data;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-    }
-    private async Task<List<StationInfoModel>?> GetStationInfo()
-    {
-        using (var client = GetHttpClient())
-        {
-            try
-            {
-                var builder = new UriBuilder(client.BaseAddress!);
-                var query = HttpUtility.ParseQueryString(builder.Query);
-                query["object"] = "mwastestation";
-                query["where"] = "name=2-B2-001";
-                query["select"] = "description";
-                builder.Path += "pid/view";
-                builder.Query = query.ToString();
-                var test = await client.GetStringAsync(builder.ToString());
-                var data = await client.GetFromJsonAsync<PayloadModel<StationInfoModel>>(builder.ToString());
-                return data?.data;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-    }
+
 
 }

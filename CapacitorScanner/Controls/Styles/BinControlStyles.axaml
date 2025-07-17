@@ -1,0 +1,82 @@
+<Styles xmlns="https://github.com/avaloniaui"
+		xmlns:c="clr-namespace:CapacitorScanner.Controls;assembly=CapacitorScanner"
+		xmlns:cvt="clr-namespace:CapacitorScanner.Converter;assembly=CapacitorScanner"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+	  <Border Padding="20">
+		  <c:BinControl/>
+		  <!-- Add Controls for Previewer Here -->
+	
+    </Border>
+  </Design.PreviewWith>
+	<Styles.Resources>
+		<cvt:ProgressBarColorConverter x:Key="ProgressBarColorConverter"/>
+		<cvt:ProgressBarWidthConverter x:Key="ProgressBarWidthConverter"/>
+	</Styles.Resources>
+	<Style Selector="ProgressBar"  >
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border
+					x:Name="ProgressBarRoot"
+					Background="White"
+					BorderBrush="{TemplateBinding BorderBrush}"
+					BorderThickness="{TemplateBinding BorderThickness}"
+					ClipToBounds="True"
+					Width="{Binding Width,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=WrapPanel},Converter={StaticResource ProgressBarWidthConverter}}"
+					CornerRadius="{TemplateBinding CornerRadius}">
+					<Panel>
+						<Panel x:Name="DeterminateRoot" Opacity="1">
+							<Panel.Transitions>
+								<Transitions>
+									<DoubleTransition Property="Opacity" Duration="0:0:0.197" />
+								</Transitions>
+							</Panel.Transitions>
+							<Border
+								x:Name="PART_Indicator"
+								Margin="{TemplateBinding Padding}"
+								Background="{TemplateBinding Value,Converter={StaticResource ProgressBarColorConverter}}"
+								CornerRadius="{TemplateBinding CornerRadius}" />
+						</Panel>
+						<Panel x:Name="IndeterminateRoot" Opacity="0">
+							<Panel.Transitions>
+								<Transitions>
+									<DoubleTransition Property="Opacity" Duration="0:0:0.197" />
+								</Transitions>
+							</Panel.Transitions>
+							<Border
+								x:Name="IndeterminateProgressBarIndicator"
+								Margin="{TemplateBinding Padding}"
+								Background="{TemplateBinding Foreground}"
+								CornerRadius="{TemplateBinding CornerRadius}" />
+							<Border
+								x:Name="IndeterminateProgressBarIndicator2"
+								Margin="{TemplateBinding Padding}"
+								Background="{TemplateBinding Foreground}"
+								CornerRadius="{TemplateBinding CornerRadius}" />
+						</Panel>
+						<LayoutTransformControl
+							x:Name="PART_LayoutTransformControl"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							IsVisible="{TemplateBinding ShowProgressText}">
+							<TextBlock Foreground="Black">
+								<TextBlock.Text>
+									<MultiBinding Converter="{StaticResource StringFormatConverter}">
+										<TemplateBinding Property="ProgressTextFormat"/>
+										<Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}"/>
+										<TemplateBinding Property="Percentage"/>
+										<TemplateBinding Property="Minimum"/>
+										<TemplateBinding Property="Maximum"/>
+									</MultiBinding>
+								</TextBlock.Text>
+							</TextBlock>
+						</LayoutTransformControl>
+					</Panel>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+	
+
+  <!-- Add Styles Here -->
+</Styles>
