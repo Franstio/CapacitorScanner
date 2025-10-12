@@ -11,7 +11,7 @@
          https://docs.avaloniaui.net/docs/guides/styles-and-resources/how-to-use-theme-variants
   -->
 	<Design.PreviewWith>
-		<StackPanel Width="150" Height="200" Spacing="10">
+		<StackPanel Width="200" Height="700" Spacing="10">
 			<StackPanel Background="{DynamicResource SystemRegionBrush}">
 				<controls:BinItemControl />
 			</StackPanel>
@@ -23,7 +23,7 @@
 
 		<Setter Property="Template">
 			<ControlTemplate>
-				<WrapPanel Height="200" Width="150" DataContext="{TemplateBinding Bin}">
+				<WrapPanel Height="700" Width="200" DataContext="{TemplateBinding Bin}">
 					<WrapPanel.Styles>
 						<Style Selector="Border.headerbin">
 							<Setter Property="Background" Value="White"/>
