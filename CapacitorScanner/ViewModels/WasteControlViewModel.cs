@@ -16,6 +16,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -89,6 +90,7 @@ namespace CapacitorScanner.ViewModels
         public async Task<ContainerBinModel?> LoadContainerBin(string binName)
         {
             var data = await Service.GetBins(binName);
+            Console.WriteLine(JsonSerializer.Serialize( data));
             Container = data?.FirstOrDefault();
             return data?.FirstOrDefault();
         }
