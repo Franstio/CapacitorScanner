@@ -37,14 +37,10 @@ public partial class WasteControl : UserControl
         });
         ScanBox.LostFocus += ScanBox_LostFocus;
     }
-    protected override async void OnInitialized()
-    {
-        base.OnInitialized();
-        await MessageBoxManager.GetMessageBoxStandard("Test", "Test").ShowAsPopupAsync(this);
-    }
     private async void ScanBox_LostFocus(object? sender, RoutedEventArgs e)
     {
         await Task.Delay(500);
+        await MessageBoxManager.GetMessageBoxStandard("Test", "Test").ShowAsPopupAsync(this);
         Dispatcher.UIThread.Post(() =>
         {
 
