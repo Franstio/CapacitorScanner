@@ -9,6 +9,9 @@ using CapacitorScanner.ViewModels;
 using CapacitorScanner.Views;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using MsBox.Avalonia.Dto;
+using MsBox.Avalonia.Enums;
+using MsBox.Avalonia;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -17,11 +20,26 @@ namespace CapacitorScanner.Controls;
 
 public partial class WasteControl : UserControl
 {
+    private async Task ShowMessage(string message)
+    {
+        var messageBoxStandardWindow = MessageBoxManager.GetMessageBoxStandard(new MessageBoxStandardParams
+        {
+            ContentTitle = "Info",
+            ContentMessage = "This works cross-platform!",
+            ButtonDefinitions = ButtonEnum.OkCancel,
+            Icon = Icon.Info
+        });
+
+
+        await messageBoxStandardWindow.ShowWindowAsync();
+    }
 
     public WasteControl()
     {
         InitializeComponent();
+        ShowMessage("Test1").RunSynchronously();
         DataContext = App.Services.GetRequiredService<WasteControlViewModel>();
+
         Dispatcher.UIThread.Post(() =>
         {
 
