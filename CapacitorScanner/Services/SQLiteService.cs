@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,6 +30,16 @@ namespace CapacitorScanner.Services
             await conn.OpenAsync();
             return conn;
         }
+        string HashPassword(string password)
+        {
+            byte[] key = Encoding.UTF8.GetBytes("asjdlnkcnalnaehneuvnq1uf9q91fvbcibnckncknkzxn=13fkanp33922acnae");
+            using (var hm = new HMACSHA512(key))
+            {
+                byte[] enc = Encoding.UTF8.GetBytes(password);
+                byte[] buffer = hm.ComputeHash(enc);
+                return Convert.ToBase64String(buffer);
+            }
+        }
 
         public async Task Initialization()
         {
@@ -43,6 +54,8 @@ namespace CapacitorScanner.Services
                     using (var con = await GetConn())
                     {
                         await con.ExecuteAsync(file);
+                        string query = "insert into login(username,password) values(@username,@password)";
+                        await con.ExecuteAsync(query, new { username = "admin", password = HashPassword("123") });
                     }
                 }
             }
