@@ -32,6 +32,11 @@ public partial class App : Application
     public static IServiceProvider Services { get;private set; } = null!;
     public override void Initialize()
     {
+        var lifetime = (IClassicDesktopStyleApplicationLifetime?)Application.Current?.ApplicationLifetime;
+        if (lifetime?.MainWindow?.PlatformImpl != null)
+        {
+            Console.WriteLine($"Platform: {lifetime.MainWindow.PlatformImpl.GetType().Name}");
+        }
         AvaloniaXamlLoader.Load(this);
     }
     public override  void OnFrameworkInitializationCompleted()

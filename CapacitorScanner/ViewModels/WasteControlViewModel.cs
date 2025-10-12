@@ -8,8 +8,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using MsBox.Avalonia;
-using MsBox.Avalonia.Dto;
-using MsBox.Avalonia.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -66,19 +64,6 @@ namespace CapacitorScanner.ViewModels
 
         public ObservableCollection<BinModel> Bins { get; set; } = [new BinModel("test","test",1,23)];
         
-        private async Task ShowMessage(string message)
-        {
-            var messageBoxStandardWindow = MessageBoxManager.GetMessageBoxStandard(new MessageBoxStandardParams
-    {
-        ContentTitle = "Info",
-        ContentMessage = "This works cross-platform!",
-        ButtonDefinitions = ButtonEnum.OkCancel,
-        Icon = Icon.Info
-    });
-
-            await messageBoxStandardWindow.ShowWindowAsync();
-        }
-
         [RelayCommand]
         public async Task LoadBins()
         {
@@ -173,7 +158,7 @@ namespace CapacitorScanner.ViewModels
         [RelayCommand]
         public async Task WasteProcess()
         {
-            await ShowMessage("test");
+            await MessageBoxManager.GetMessageBoxStandard("Test", "Test").ShowAsync();
             if (string.IsNullOrEmpty(Scan))
                 return;
             if (User is null)
