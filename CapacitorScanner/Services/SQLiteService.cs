@@ -48,7 +48,7 @@ namespace CapacitorScanner.Services
             }
             catch(Exception ex)
             {
-                Trace.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
             }
         }
         public async Task CreateTransaction(ScrapTransaction transaction)
