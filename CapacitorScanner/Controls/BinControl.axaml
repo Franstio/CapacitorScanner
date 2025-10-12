@@ -38,7 +38,7 @@
 					Minimum="0" Maximum="100" CornerRadius="3"
 							 Value="{Binding Bin.Percentage}"
 					ShowProgressText="True"/>
-				<Button Command="{Binding TestClickCommand}" ClickMode="Press"   BorderBrush="Black" HorizontalAlignment="Stretch" BorderThickness="1" CornerRadius="3" Background="#ffff8e">
+				<Button Command="{Binding TriggerTransactionCommand}" ClickMode="Press"   BorderBrush="Black" HorizontalAlignment="Stretch" BorderThickness="1" CornerRadius="3" Background="#ffff8e">
 					<TextBlock FontWeight="Bold" FontFamily="Century Gothic" FontSize="15" HorizontalAlignment="Center" Foreground="#3e5d28" Text="{Binding Bin.Name}" ></TextBlock>
 				</Button>
 

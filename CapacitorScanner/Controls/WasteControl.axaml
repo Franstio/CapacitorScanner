@@ -53,7 +53,7 @@
 						</ItemsRepeater.Layout>
 						<ItemsRepeater.ItemTemplate>
 							<DataTemplate>
-								<cc:BinItemControl Bin="{Binding}" Container="{Binding DataContext.Container,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" BinCommand="{Binding DataContext.TestClickCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+								<cc:BinItemControl Bin="{Binding}" Container="{Binding DataContext.Container,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" BinCommand="{Binding DataContext.TriggerTransactionCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
 							</DataTemplate>
 						</ItemsRepeater.ItemTemplate>
 					</ItemsRepeater>

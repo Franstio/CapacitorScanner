@@ -1,3 +1,4 @@
+using Avalonia.Data;
 using CapacitorScanner.API.Model;
 using CapacitorScanner.Messages;
 using CapacitorScanner.Model;
@@ -25,6 +26,15 @@ namespace CapacitorScanner.ViewModels
         private readonly PIDSGService Service;
         private readonly ConfigService ConfigService;   
         private readonly SQLiteService DbService;
+        private enum TransactionType
+        {
+            Dispose,
+            Collection,
+            Manual
+        }
+
+        private TransactionType? transactionType = null;
+
         [ObservableProperty]
         private UserModel? user = null;
 
@@ -36,19 +46,24 @@ namespace CapacitorScanner.ViewModels
 
         [ObservableProperty]
         private ContainerBinModel? container = null;
+        
         [ObservableProperty]
         private bool isAuto = false;
+        
         [ObservableProperty]
         private string message= "Scan Badge ID";
+        
         private DateTime loginDate = DateTime.Now;
+        
         public WasteControlViewModel(PIDSGService service,SQLiteService _db,ConfigService config) 
         {
             Service = service;
-            DbService = _db;
+            DbService = _db; 
             ConfigService = config;
         }
 
         public ObservableCollection<BinModel> Bins { get; set; } = [new BinModel("test","test",1,23)];
+        
         [RelayCommand]
         public async Task LoadBins()
         {
@@ -60,83 +75,99 @@ namespace CapacitorScanner.ViewModels
             foreach (var item in _data)
                 Bins.Add(item);
         }
-        public void MarkBin()
+        void ResetStateInput(string message = "Scan Badge ID")
         {
-            if (Container is null)
-                return;
-            
+            Message = message;
+            User = null;
+            Container = null;
+            OpenBin = null;
+            transactionType = null;
         }
 
+        public async Task<ContainerBinModel?> LoadContainerBin(string binName)
+        {
+            var data = await Service.GetBins(binName);
+            return data?.FirstOrDefault();
+        }
+        async Task HandleLogin()
+        {
+            User = await Service.LoginUser(Scan);
+            loginDate = DateTime.Now;
+            if (User is not null)
+                Message = "Scan QR Code Sampah";
+        }
+        async Task ContainerScan()
+        {
+            Container = await LoadContainerBin(Scan);
+            if (Container is null)
+                return;
+            if (IsAuto)
+                await ContainerAuto();
+            else
+                await ContainerManual();
+        }
+        async Task ContainerAuto()
+        {
+            if (User is null)
+                throw new Exception("User haven't login yet");
+            int[] activity = [1, 2];
+
+            OpenBin = await Service.AutoProcessBinActivity(User.badgeno, Scan);
+            if (OpenBin is null) return;
+
+            if (activity.Contains(OpenBin.activity))
+            {
+                transactionType = OpenBin.activity == 1 ? TransactionType.Dispose : TransactionType.Collection;
+                Message = $"Verification {transactionType.ToString()}\nScan QR Code Container bin";
+            }
+            else
+            {
+                await MessageBoxManager.GetMessageBoxStandard("Bin Error", OpenBin?.activity == 0 ? $"Bin Overload" : OpenBin?.status).ShowAsync();
+                ResetStateInput();
+            }
+
+        }
+        Task ContainerManual()
+        {
+
+            Message = "Waste process\n Pilih Waste bin";
+            transactionType = TransactionType.Manual;
+            return Task.CompletedTask;
+        }
+        async Task Verification()
+        {
+            if (User is null || OpenBin is null)
+                throw new Exception("Invalid Input");
+            if (OpenBin.openbinname == Scan && transactionType.HasValue && transactionType.Value != TransactionType.Manual)
+            {
+                
+                var res = await Service.AutoProcessBinActivity(User.badgeno, Scan);
+                if (res?.status != "PASS")
+                    await MessageBoxManager.GetMessageBoxStandard("Verification", "ACCESS DENY").ShowAsync();
+                else
+                    await MessageBoxManager.GetMessageBoxStandard("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process").ShowAsync();
+                ResetStateInput();
+            }
+            else if (transactionType.HasValue && transactionType.Value != TransactionType.Manual)
+                await MessageBoxManager.GetMessageBoxStandard("Verification Failed", "Wrong Container Bin").ShowAsync();
+            await LoadBins();
+        }
         [RelayCommand]
         public async Task WasteProcess()
         {
             if (string.IsNullOrEmpty(Scan))
                 return;
             if (User is null)
-            {
-                User = await Service.LoginUser(Scan);
-                loginDate = DateTime.Now;
-                if (User is not null)
-                    Message = "Scan QR Code Sampah";
-            }
+                await HandleLogin();
             else if (Container is null)
-            {
-                await LoadContainerBin(Scan);
-                if (Container is not null)
-                {
-                    if (IsAuto)
-                    {
-                        OpenBin = await Service.AutoProcessBinActivity(User.badgeno, Scan);
-                        if (OpenBin?.activity == 1)
-                            Message = "Verification Dispose\nScan QR Code Container bin";
-                        else if (OpenBin?.activity == 2)
-                            Message = "Verifcation Collection\nScan QR Code Container bin";
-                        else
-                        {
-                            if (OpenBin?.activity == 0)
-                                await MessageBoxManager.GetMessageBoxStandard("Bin Error", $"Bin Overload").ShowAsync();
-                            else
-                                await MessageBoxManager.GetMessageBoxStandard("Bin Error", OpenBin?.status).ShowAsync();
-                            Message = "Scan Badge ID";
-                            User = null;
-                            Container = null;
-                            OpenBin = null;
-                        }
-                    }
-                    else
-                        Message = "Waste process\n Pilih Waste bin";
-                }
-            }
+                await ContainerScan();
             else if (OpenBin is not null)
-            {
-                if (OpenBin.openbinname == Scan)
-                {
-                    await MessageBoxManager.GetMessageBoxStandard("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process").ShowAsync();
-                    Message = "Scan Badge ID";
-                    User = null;
-                    Container = null;
-                    OpenBin = null;
-                    await LoadBins();
-                }
-                else if (Scan[0] == '1')
-                {
-                    var res=  await Service.AutoProcessBinActivity(User.badgeno, Scan);
-                    if (res.status != "PASS")
-                        await MessageBoxManager.GetMessageBoxStandard("Verification", "ACCESS DENY").ShowAsync();
-                }
-                else
-                    await MessageBoxManager.GetMessageBoxStandard("Verification Failed", "Wrong Container Bin").ShowAsync();
-            }
+                await Verification();
             Scan = string.Empty;
-        }
-        public async Task LoadContainerBin(string binName)
-        {
-            var data = await Service.GetBins(binName);
-            Container = data?.FirstOrDefault();
         }
 
         [RelayCommand]
-        public async Task TestClick(BinModel? Bin =null)
+        public async Task TriggerTransaction(BinModel? Bin =null)
         {
             if (Bin is null || Container is null || User is null)
                 return;
@@ -146,10 +177,7 @@ namespace CapacitorScanner.ViewModels
             await DbService.CreateTransaction(transaction);
             string message = res?.data[0].status ?? "Error";
             await MessageBoxManager.GetMessageBoxStandard("Result", message).ShowAsync();
-            User = null;
-            Container = null;
-            OpenBin = null;
-            Message = "Scan Badge ID";
+            ResetStateInput();
             await LoadBins();
         }
 

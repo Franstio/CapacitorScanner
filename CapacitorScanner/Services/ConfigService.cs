@@ -13,7 +13,7 @@ namespace CapacitorScanner.Services
     {
         private const string ConfigFile = "appsettings.json";
 
-        public ConfigModel Config { get; private set; } = new ConfigModel(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
+        public ConfigModel Config { get; private set; } = new ConfigModel();
 
         public  void LoadAsync()
         {
@@ -28,7 +28,7 @@ namespace CapacitorScanner.Services
             if (_config is not null)
             {
                 if (string.IsNullOrEmpty(_config.API_URL))
-                    Config = new ConfigModel("http://10.89.1.99/api/", "pid/pibadgeverify", "pid/pistationactivity", "pid/view", "pid/pibadgeverifyStep2", "2-B2-002","scanner.db");
+                    Config = new ConfigModel("http://10.89.1.99/api/", "pid/pibadgeverify", "pid/pistationactivity", "pid/view", "pid/pibadgeverifyStep2", "","scanner.db");
                 else
                     Config = _config;
             }

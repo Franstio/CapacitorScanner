@@ -19,7 +19,7 @@ namespace CapacitorScanner.ViewModels
             
         }
         [RelayCommand]
-        async void TestClick()
+        async void TriggerTransaction()
         {
             await MessageBoxManager.GetMessageBoxStandard("Bin Alert", $"Bin {Bin.Name}").ShowAsync();
         }
