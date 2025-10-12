@@ -17,4 +17,10 @@
   <ItemGroup>
     <ProjectReference Include="..\CapacitorScanner\CapacitorScanner.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="scanner-init.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
