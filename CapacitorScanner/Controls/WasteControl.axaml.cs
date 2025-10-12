@@ -37,7 +37,6 @@ public partial class WasteControl : UserControl
     public WasteControl()
     {
         InitializeComponent();
-        ShowMessage("Test1").RunSynchronously();
         DataContext = App.Services.GetRequiredService<WasteControlViewModel>();
 
         Dispatcher.UIThread.Post(() =>
@@ -58,6 +57,8 @@ public partial class WasteControl : UserControl
     private async void ScanBox_LostFocus(object? sender, RoutedEventArgs e)
     {
         await Task.Delay(500);
+
+        await ShowMessage("Test1");
         Dispatcher.UIThread.Post(() =>
         {
 
