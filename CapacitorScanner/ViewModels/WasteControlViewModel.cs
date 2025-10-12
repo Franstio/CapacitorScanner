@@ -76,7 +76,7 @@ namespace CapacitorScanner.ViewModels
         Icon = Icon.Info
     });
 
-            await messageBoxStandardWindow.ShowAsync();
+            await messageBoxStandardWindow.ShowWindowAsync();
         }
 
         [RelayCommand]
