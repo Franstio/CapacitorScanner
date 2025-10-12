@@ -160,7 +160,6 @@ namespace CapacitorScanner.ViewModels
         [RelayCommand]
         public async Task WasteProcess()
         {
-            await dialogService.ShowMessageAsync("Test", "Test");
             if (string.IsNullOrEmpty(Scan))
                 return;
             if (User is null)
