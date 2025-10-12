@@ -98,6 +98,7 @@ namespace CapacitorScanner.ViewModels
         }
         async Task ContainerScan()
         {
+            await MessageBoxManager.GetMessageBoxStandard("Test", "Test").ShowAsync();
             Container = await LoadContainerBin(Scan);
             if (Container is null)
             {
