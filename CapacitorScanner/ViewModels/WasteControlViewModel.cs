@@ -89,6 +89,7 @@ namespace CapacitorScanner.ViewModels
         public async Task<ContainerBinModel?> LoadContainerBin(string binName)
         {
             var data = await Service.GetBins(binName);
+            Container = data?.FirstOrDefault();
             return data?.FirstOrDefault();
         }
         async Task HandleLogin()
@@ -100,8 +101,8 @@ namespace CapacitorScanner.ViewModels
         }
         async Task ContainerScan()
         {
-            Container = await LoadContainerBin(Scan);
-            if (Container is null)
+            var container = await LoadContainerBin(Scan);
+            if (container is null)
             {
                 await dialogService.ShowMessageAsync("Scan Failed","Container Not Found");
                 return;
@@ -117,17 +118,18 @@ namespace CapacitorScanner.ViewModels
                 throw new Exception("User haven't login yet");
             int[] activity = [1, 2];
 
-            OpenBin = await Service.AutoProcessBinActivity(User.badgeno, Scan);
-            if (OpenBin is null) return;
+            var bin = await Service.AutoProcessBinActivity(User.badgeno, Scan);
+            OpenBin = bin;
+            if (bin is null) return;
 
-            if (activity.Contains(OpenBin.activity))
+            if (activity.Contains(bin.activity))
             {
-                transactionType = OpenBin.activity == 1 ? TransactionType.Dispose : TransactionType.Collection;
+                transactionType = bin.activity == 1 ? TransactionType.Dispose : TransactionType.Collection;
                 Message = $"Verification {transactionType.ToString()}\nScan QR Code Container bin";
             }
             else
             {
-                await dialogService.ShowMessageAsync("Bin Error", OpenBin?.activity == 0 ? $"Bin Overload" : OpenBin?.status ?? "");
+                await dialogService.ShowMessageAsync("Bin Error", bin?.activity == 0 ? $"Bin Overload" : bin?.status ?? "");
                 ResetStateInput();
             }
 
