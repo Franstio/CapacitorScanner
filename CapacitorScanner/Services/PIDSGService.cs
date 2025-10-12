@@ -49,7 +49,7 @@ namespace CapacitorScanner.Services
                     Console.WriteLine(builder.ToString());
                     var test = await client.GetStringAsync(builder.ToString());
                     var data = await client.GetFromJsonAsync<PayloadModel<ContainerBinModel>>(builder.ToString());
-                    Console.WriteLine(JsonSerializer.Serialize(data.data));
+                    Console.WriteLine(JsonSerializer.Serialize(data?.data));
                     return data?.data;
                 }
                 catch 
