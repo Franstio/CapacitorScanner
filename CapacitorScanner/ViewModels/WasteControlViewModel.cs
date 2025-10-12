@@ -126,7 +126,6 @@ namespace CapacitorScanner.ViewModels
         }
         async Task ContainerAuto()
         {
-            await ShowMessage("test");
             if (User is null)
                 throw new Exception("User haven't login yet");
             int[] activity = [1, 2];
@@ -174,6 +173,7 @@ namespace CapacitorScanner.ViewModels
         [RelayCommand]
         public async Task WasteProcess()
         {
+            await ShowMessage("test");
             if (string.IsNullOrEmpty(Scan))
                 return;
             if (User is null)
