@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -48,7 +49,7 @@ namespace CapacitorScanner.Services
                     Console.WriteLine(builder.ToString());
                     var test = await client.GetStringAsync(builder.ToString());
                     var data = await client.GetFromJsonAsync<PayloadModel<ContainerBinModel>>(builder.ToString());
-                    Console.WriteLine(data);
+                    Console.WriteLine(JsonSerializer.Serialize(data));
                     return data?.data;
                 }
                 catch 
