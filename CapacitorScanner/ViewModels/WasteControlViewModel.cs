@@ -100,7 +100,10 @@ namespace CapacitorScanner.ViewModels
         {
             Container = await LoadContainerBin(Scan);
             if (Container is null)
+            {
+                await MessageBoxManager.GetMessageBoxStandard("Scan Failed","Container Not Found").ShowAsync();
                 return;
+            }
             if (IsAuto)
                 await ContainerAuto();
             else
