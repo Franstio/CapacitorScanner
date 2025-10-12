@@ -9,6 +9,7 @@ using CapacitorScanner.ViewModels;
 using CapacitorScanner.Views;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using MsBox.Avalonia;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -36,7 +37,11 @@ public partial class WasteControl : UserControl
         });
         ScanBox.LostFocus += ScanBox_LostFocus;
     }
-
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        await MessageBoxManager.GetMessageBoxStandard("Test", "Test").ShowAsPopupAsync(this);
+    }
     private async void ScanBox_LostFocus(object? sender, RoutedEventArgs e)
     {
         await Task.Delay(500);
