@@ -22,6 +22,7 @@ public static class ServiceCollectionExtension
             services.AddScoped(viewmodel);
         ConfigService configService = new ConfigService();
          configService.LoadAsync();
+        services.AddTransient<DialogService>();
         services.AddSingleton(configService);
         services.AddSingleton<AppState>();
     }

@@ -26,6 +26,7 @@ namespace CapacitorScanner.ViewModels
         private readonly PIDSGService Service;
         private readonly ConfigService ConfigService;   
         private readonly SQLiteService DbService;
+        private readonly DialogService dialogService;
         private enum TransactionType
         {
             Dispose,
@@ -55,11 +56,12 @@ namespace CapacitorScanner.ViewModels
         
         private DateTime loginDate = DateTime.Now;
         
-        public WasteControlViewModel(PIDSGService service,SQLiteService _db,ConfigService config) 
+        public WasteControlViewModel(PIDSGService service,SQLiteService _db,ConfigService config,DialogService dialogService) 
         {
             Service = service;
             DbService = _db; 
             ConfigService = config;
+            this.dialogService = dialogService;
         }
 
         public ObservableCollection<BinModel> Bins { get; set; } = [new BinModel("test","test",1,23)];
@@ -101,7 +103,7 @@ namespace CapacitorScanner.ViewModels
             Container = await LoadContainerBin(Scan);
             if (Container is null)
             {
-                await MessageBoxManager.GetMessageBoxStandard("Scan Failed","Container Not Found").ShowAsync();
+                await dialogService.ShowMessageAsync("Scan Failed","Container Not Found");
                 return;
             }
             if (IsAuto)
@@ -125,7 +127,7 @@ namespace CapacitorScanner.ViewModels
             }
             else
             {
-                await MessageBoxManager.GetMessageBoxStandard("Bin Error", OpenBin?.activity == 0 ? $"Bin Overload" : OpenBin?.status).ShowAsync();
+                await dialogService.ShowMessageAsync("Bin Error", OpenBin?.activity == 0 ? $"Bin Overload" : OpenBin?.status ?? "");
                 ResetStateInput();
             }
 
@@ -146,19 +148,19 @@ namespace CapacitorScanner.ViewModels
                 
                 var res = await Service.AutoProcessBinActivity(User.badgeno, Scan);
                 if (res?.status != "PASS")
-                    await MessageBoxManager.GetMessageBoxStandard("Verification", "ACCESS DENY").ShowAsync();
+                    await dialogService.ShowMessageAsync("Verification", "ACCESS DENY");
                 else
-                    await MessageBoxManager.GetMessageBoxStandard("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process").ShowAsync();
+                    await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
                 ResetStateInput();
             }
             else if (transactionType.HasValue && transactionType.Value != TransactionType.Manual)
-                await MessageBoxManager.GetMessageBoxStandard("Verification Failed", "Wrong Container Bin").ShowAsync();
+                await dialogService.ShowMessageAsync("Verification Failed", "Wrong Container Bin");
             await LoadBins();
         }
         [RelayCommand]
         public async Task WasteProcess()
         {
-            await MessageBoxManager.GetMessageBoxStandard("Test", "Test").ShowAsync();
+            await dialogService.ShowMessageAsync("Test", "Test");
             if (string.IsNullOrEmpty(Scan))
                 return;
             if (User is null)
@@ -180,7 +182,7 @@ namespace CapacitorScanner.ViewModels
                 User.badgeno, Container.name, Bin.Name, "ONLINE", ConfigService.Config.hostname, (double)Container.weightresult, 0, res?.data[0].activity ?? "None", Container.scrapitem_name, Container.scraptype_name, Container.scrapgroup_name, User.badgeno);
             await DbService.CreateTransaction(transaction);
             string message = res?.data[0].status ?? "Error";
-            await MessageBoxManager.GetMessageBoxStandard("Result", message).ShowAsync();
+            await dialogService.ShowMessageAsync("Result", message);
             ResetStateInput();
             await LoadBins();
         }

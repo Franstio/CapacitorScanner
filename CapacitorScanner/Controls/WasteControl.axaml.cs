@@ -40,7 +40,6 @@ public partial class WasteControl : UserControl
     private async void ScanBox_LostFocus(object? sender, RoutedEventArgs e)
     {
         await Task.Delay(500);
-        await MessageBoxManager.GetMessageBoxStandard("Test", "Test").ShowAsPopupAsync(this);
         Dispatcher.UIThread.Post(() =>
         {
 
