@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace CapacitorScanner.Services
                 else
                     Config = _config;
             }
+            _config!.hostname = string.IsNullOrEmpty(_config.hostname) ? Dns.GetHostName() : _config.hostname;   
         }
 
         public  void Save()
