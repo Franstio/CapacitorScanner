@@ -16,6 +16,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
@@ -28,6 +29,7 @@ namespace CapacitorScanner.ViewModels
         private readonly ConfigService ConfigService;   
         private readonly SQLiteService DbService;
         private readonly DialogService dialogService;
+        private HttpClient httpClient;
         private enum TransactionType
         {
             Dispose,
@@ -57,11 +59,12 @@ namespace CapacitorScanner.ViewModels
         
         private DateTime loginDate = DateTime.Now;
         
-        public WasteControlViewModel(PIDSGService service,SQLiteService _db,ConfigService config,DialogService dialogService) 
+        public WasteControlViewModel(PIDSGService service,SQLiteService _db,ConfigService config,DialogService dialogService,HttpClient client) 
         {
             Service = service;
             DbService = _db; 
             ConfigService = config;
+            this.httpClient = client;
             this.dialogService = dialogService;
         }
 
@@ -143,18 +146,22 @@ namespace CapacitorScanner.ViewModels
             transactionType = TransactionType.Manual;
             return Task.CompletedTask;
         }
+        async Task SendBinVerif(string bin)
+        {
+            string binhost = await DbService.GetHostname(bin);
+            string token = $"root:00000000";
+            string base64token = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization",$"Basic {base64token}");
+            await httpClient.GetAsync($"https://{bin}/verifikasi?verifikasi=1");
+        }
         async Task Verification()
         {
             if (User is null || OpenBin is null)
                 throw new Exception("Invalid Input");
             if (OpenBin.openbinname == Scan && transactionType.HasValue && transactionType.Value != TransactionType.Manual)
             {
-                
-                var res = await Service.AutoProcessBinActivity(User.badgeno, Scan);
-                if (res?.status != "PASS")
-                    await dialogService.ShowMessageAsync("Verification", "ACCESS DENY");
-                else
-                    await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
+                await SendBinVerif(openBin.openbinname);       
+                await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
                 ResetStateInput();
             }
             else if (transactionType.HasValue && transactionType.Value != TransactionType.Manual)

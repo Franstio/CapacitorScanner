@@ -111,5 +111,14 @@ namespace CapacitorScanner.Services
                 return res.FirstOrDefault();
             }
         }
+        public async Task<string> GetHostname(string bin)
+        {
+            using (var con = await GetConn())
+            {
+                string query = $"Select hostname from binhost where bin=@bin";
+                var res = await con.ExecuteScalarAsync<string>(query, new {bin});
+                return res!;
+            }
+        }
     }
 }

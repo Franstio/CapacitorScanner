@@ -25,6 +25,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<DialogService>();
         services.AddSingleton(configService);
         services.AddSingleton<AppState>();
+        services.AddHttpClient();
     }
 }
 

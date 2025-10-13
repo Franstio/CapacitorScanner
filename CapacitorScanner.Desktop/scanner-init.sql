@@ -21,3 +21,9 @@ id integer primary key autoincrement,
 username text,
 password text
 );
+
+
+CREATE TABLE binhost(
+bin TEXT primary key,
+hostname TEXT,
+);
