@@ -146,13 +146,22 @@ namespace CapacitorScanner.ViewModels
             transactionType = TransactionType.Manual;
             return Task.CompletedTask;
         }
-        async Task SendBinVerif(string bin)
+        async Task<bool> SendBinVerif(string bin)
         {
             string binhost = await DbService.GetHostname(bin);
             string token = $"root:00000000";
             string base64token = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization",$"Basic {base64token}");
-            await httpClient.GetAsync($"https://{bin}/verifikasi?verifikasi=1");
+            try
+            {
+                var res = await httpClient.GetAsync($"https://{bin}/verifikasi?verifikasi=1");
+                res.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch 
+            {
+                    return false;
+            }
         }
         async Task Verification()
         {
@@ -160,9 +169,16 @@ namespace CapacitorScanner.ViewModels
                 throw new Exception("Invalid Input");
             if (OpenBin.openbinname == Scan && transactionType.HasValue && transactionType.Value != TransactionType.Manual)
             {
-                await SendBinVerif(openBin.openbinname);       
-                await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
-                ResetStateInput();
+                if (!await SendBinVerif(OpenBin.openbinname))
+                {
+
+                    await dialogService.ShowMessageAsync("Transaction Not Finished", "Bin Offline");
+                }
+                else
+                {
+                    await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
+                    ResetStateInput();
+                }
             }
             else if (transactionType.HasValue && transactionType.Value != TransactionType.Manual)
                 await dialogService.ShowMessageAsync("Verification Failed", "Wrong Container Bin");
