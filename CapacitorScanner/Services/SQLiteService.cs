@@ -116,9 +116,8 @@ namespace CapacitorScanner.Services
             using (var con = await GetConn())
             {
                 string query = $"Select hostname from binhost where bin=@bin";
-                var res = await con.ExecuteReaderAsync(query, new {bin});
-                await res.ReadAsync()!;
-                return res.GetString(0);
+                var res = await con.ExecuteScalarAsync<string>(query, new {bin});
+                return res!;
             }
         }
     }

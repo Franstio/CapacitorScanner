@@ -155,7 +155,7 @@ namespace CapacitorScanner.ViewModels
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization",$"Basic {base64token}");
             try
             {
-                var res = await httpClient.GetAsync($"https://{bin}/verifikasi?verifikasi=1");
+                var res = await httpClient.GetAsync($"https://{binhost}/verifikasi?verifikasi=1");
                 res.EnsureSuccessStatusCode();
                 return true;
             }
