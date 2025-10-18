@@ -7,6 +7,7 @@ using CapacitorScanner.ViewModels;
 using CapacitorScanner.Views;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CapacitorScanner;
@@ -25,7 +26,22 @@ public static class ServiceCollectionExtension
         services.AddTransient<DialogService>();
         services.AddSingleton(configService);
         services.AddSingleton<AppState>();
-        services.AddHttpClient();
+
+        Func<HttpClientHandler> f = () =>
+        {
+            var handler = new HttpClientHandler();
+            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) =>
+                {
+                    return true;
+                };
+            return handler;
+        };
+        services.AddHttpClient().ConfigureHttpClientDefaults(cfg=>
+        {
+            cfg.ConfigurePrimaryHttpMessageHandler(f);
+        });
     }
 }
 
