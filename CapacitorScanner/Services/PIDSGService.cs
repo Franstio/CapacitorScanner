@@ -68,6 +68,8 @@ namespace CapacitorScanner.Services
                 {
                     var builder = new UriBuilder(client.BaseAddress!);
                     var test = await client.PostAsJsonAsync("pidatalog",model);
+                    Console.WriteLine(test.RequestMessage?.RequestUri);
+                    Console.WriteLine(await test.Content.ReadAsStringAsync());
                 }
                 catch
                 {
