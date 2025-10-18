@@ -13,14 +13,14 @@ activity text,
 scrapitem_name text,
 scraptype_name text,
 scrapgroup_name text,
-lastbadgeno text,
+lastbadgeno text
 );
 
 CREATE TABLE login( id integer primary key autoincrement,
 username text,
-password text,
+password text
 );
 
 CREATE TABLE binhost( bin TEXT primary key,
-hostname TEXT,
+hostname TEXT
 );
