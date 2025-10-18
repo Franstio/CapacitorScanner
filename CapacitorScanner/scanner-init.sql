@@ -1,5 +1,5 @@
 ﻿CREATE TABLE scraptransaction(
-id integer primary key autoincrement,
+id integer primary key auto increment,
 transaction_date text,
 login_date text,
 badgeno text,
