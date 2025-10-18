@@ -67,7 +67,7 @@ namespace CapacitorScanner.Services
                 try
                 {
                     var builder = new UriBuilder(client.BaseAddress!);
-                    var test = await client.PostAsJsonAsync("pid/pidatalog",model);
+                    var test = await client.PostAsJsonAsync("pidatalog",model);
                 }
                 catch
                 {
