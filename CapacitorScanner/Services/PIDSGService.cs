@@ -70,6 +70,7 @@ namespace CapacitorScanner.Services
                     var test = await client.PostAsJsonAsync("pidatalog",model);
                     Console.WriteLine(test.RequestMessage?.RequestUri);
                     Console.WriteLine(await test.Content.ReadAsStringAsync());
+                    Console.WriteLine(JsonSerializer.Serialize(model));
                 }
                 catch
                 {
