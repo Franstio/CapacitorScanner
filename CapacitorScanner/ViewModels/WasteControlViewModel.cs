@@ -159,8 +159,9 @@ namespace CapacitorScanner.ViewModels
                 res.EnsureSuccessStatusCode();
                 return true;
             }
-            catch 
+            catch (HttpRequestException ex)
             {
+                Console.WriteLine   (ex.Message);
                     return false;
             }
         }
