@@ -1,5 +1,6 @@
 ﻿using CapacitorScanner.API.Model;
 using CapacitorScanner.Model;
+using CapacitorScanner.Model.PIDSG;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,6 +12,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml.Linq;
 
 namespace CapacitorScanner.Services
 {
@@ -58,8 +60,21 @@ namespace CapacitorScanner.Services
                 }
             }
         }
-
-
+        public async Task SendCollection(CollectionActivityModel model)
+        {
+            using (var client = BuildHttpClient())
+            {
+                try
+                {
+                    var builder = new UriBuilder(client.BaseAddress!);
+                    var test = await client.PostAsJsonAsync("pid/pidatalog",model);
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+        }
         public async Task<List<StationInfoModel>?> GetStationInfo()
         {
             using (var client = BuildHttpClient())

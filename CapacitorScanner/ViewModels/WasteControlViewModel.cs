@@ -2,6 +2,7 @@ using Avalonia.Data;
 using CapacitorScanner.API.Model;
 using CapacitorScanner.Messages;
 using CapacitorScanner.Model;
+using CapacitorScanner.Model.PIDSG;
 using CapacitorScanner.Services;
 using CapacitorScanner.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -173,9 +174,12 @@ namespace CapacitorScanner.ViewModels
                 {
 
                     await dialogService.ShowMessageAsync("Transaction Not Finished", "Bin Offline");
+                    return;
                 }
                 else
                 {
+                    if (transactionType.HasValue && transactionType.Value == TransactionType.Collection)
+                        await Collection();
                     await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
                     ResetStateInput();
                 }
@@ -183,6 +187,23 @@ namespace CapacitorScanner.ViewModels
             else if (transactionType.HasValue && transactionType.Value != TransactionType.Manual)
                 await dialogService.ShowMessageAsync("Verification Failed", "Wrong Container Bin");
             await LoadBins();
+        }
+        async Task Collection()
+        {
+            if (User is null || OpenBin is null)
+                throw new Exception("Invalid input");
+            var station = (await Service.GetStationInfo())!.First();
+            var activity = new CollectionActivityModel()
+            {
+                BadgeNo = User!.badgeno,
+                Activity = "Collection",
+                StationName = station.description,
+                FromBinName = OpenBin!.openbinname,
+                LoginDate = "",
+                ToBinName = "",
+                Weight = "0"
+            };
+            await Service.SendCollection(activity);
         }
         [RelayCommand]
         public async Task WasteProcess()
