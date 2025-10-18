@@ -199,7 +199,7 @@ namespace CapacitorScanner.ViewModels
             {
                 BadgeNo = User!.badgeno,
                 Activity = "Collection",
-                StationName = station.description,
+                StationName = OpenBin!.openbinname.Substring(0,OpenBin!.openbinname.Length-3),
                 FromBinName = OpenBin!.openbinname,
                 LoginDate = "",
                 ToBinName = "",
