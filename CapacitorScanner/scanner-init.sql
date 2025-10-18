@@ -1,5 +1,5 @@
-﻿CREATE TABLE scraptransaction(
-id integer primary key autoincrement,
+﻿
+CREATE TABLE scraptransaction( id integer primary key autoincrement,
 transaction_date text,
 login_date text,
 badgeno text,
@@ -16,13 +16,11 @@ scrapgroup_name text,
 lastbadgeno text
 );
 
-CREATE TABLE login(
-id integer primary key autoincrement,
+CREATE TABLE login( id integer primary key autoincrement,
 username text,
-password text///
+password text
 );
 
-CREATE TABLE binhost(
-bin TEXT primary key,
+CREATE TABLE binhost( bin TEXT primary key,
 hostname TEXT
 );
