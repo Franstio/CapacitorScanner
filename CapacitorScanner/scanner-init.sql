@@ -24,5 +24,5 @@ password text
 
 CREATE TABLE binhost(
 bin TEXT primary key,
-hostname TEXT,
+hostname TEXT
 );
