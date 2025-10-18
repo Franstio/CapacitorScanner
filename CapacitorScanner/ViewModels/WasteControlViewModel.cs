@@ -53,7 +53,7 @@ namespace CapacitorScanner.ViewModels
         private ContainerBinModel? container = null;
         
         [ObservableProperty]
-        private bool isAuto = false;
+        private bool isAuto = true;
         
         [ObservableProperty]
         private string message= "Scan Badge ID";
