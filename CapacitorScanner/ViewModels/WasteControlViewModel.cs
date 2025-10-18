@@ -152,10 +152,11 @@ namespace CapacitorScanner.ViewModels
             string binhost = await DbService.GetHostname(bin);
             string token = $"root:00000000";
             string base64token = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization",$"Basic {base64token}");
+            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, $"https://{binhost}/verifikasi?verifikasi=1");
+            req.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64token}");
             try
             {
-                var res = await httpClient.GetAsync($"https://{binhost}/verifikasi?verifikasi=1");
+                var res = await httpClient.SendAsync(req);
                 res.EnsureSuccessStatusCode();
                 return true;
             }
