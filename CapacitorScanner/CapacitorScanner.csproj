@@ -42,10 +42,4 @@
   <ItemGroup>
     <Folder Include="Services\Interfaces\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="scanner-init.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>
