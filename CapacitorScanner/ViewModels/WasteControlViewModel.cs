@@ -19,7 +19,9 @@ using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Web;
 
 namespace CapacitorScanner.ViewModels
@@ -68,19 +70,29 @@ namespace CapacitorScanner.ViewModels
             this.httpClient = client;
             this.dialogService = dialogService;
         }
-
+        private System.Threading.Timer? timer = null;
         public ObservableCollection<BinModel> Bins { get; set; } = [new BinModel("test","test",1,23)];
         
         [RelayCommand]
-        public async Task LoadBins()
+        public void LoadBins()
         {
-            var data = await Service.GetBins();
-            if (data is null)
-                return;
-            Bins.Clear();
-            var _data = data.Select(x => new BinModel(x.name, x.scraptype_name, x.weightresult, x.capacity)).OrderBy(x => x.Name);
-            foreach (var item in _data)
-                Bins.Add(item);
+            if (timer is not null)
+                timer.Dispose();
+            timer = new System.Threading.Timer(async (obj) =>
+            {
+                try
+                {
+                    var data = await Service.GetBins();
+                    if (data is null)
+                        return;
+                    Bins.Clear();
+                    var _data = data.Select(x => new BinModel(x.name, x.scraptype_name, x.weightresult, x.capacity)).OrderBy(x => x.Name);
+                    foreach (var item in _data)
+                        Bins.Add(item);
+                }
+                catch { }
+            },null,0,3000);
+
         }
         void ResetStateInput(string message = "Scan Badge ID")
         {
@@ -188,7 +200,7 @@ namespace CapacitorScanner.ViewModels
             }
             else if (transactionType.HasValue && transactionType.Value != TransactionType.Manual)
                 await dialogService.ShowMessageAsync("Verification Failed", "Wrong Container Bin");
-            await LoadBins();
+//             LoadBins();
         }
         async Task Collection()
         {
@@ -233,7 +245,7 @@ namespace CapacitorScanner.ViewModels
             string message = res?.data[0].status ?? "Error";
             await dialogService.ShowMessageAsync("Result", message);
             ResetStateInput();
-            await LoadBins();
+//            LoadBins();
         }
 
         [RelayCommand]
