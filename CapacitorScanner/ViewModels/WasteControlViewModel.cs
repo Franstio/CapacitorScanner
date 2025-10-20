@@ -16,6 +16,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
@@ -184,19 +185,23 @@ namespace CapacitorScanner.ViewModels
                 throw new Exception("Invalid Input");
             if (OpenBin.openbinname == Scan && transactionType.HasValue && transactionType.Value != TransactionType.Manual)
             {
-                if (!await SendBinVerif(OpenBin.openbinname))
+                if (transactionType.HasValue && transactionType.Value == TransactionType.Collection)
                 {
-
-                    await dialogService.ShowMessageAsync("Transaction Not Finished", "Bin Offline");
-                    return;
+//                    await Collection();
                 }
                 else
                 {
-                    if (transactionType.HasValue && transactionType.Value == TransactionType.Collection)
-                        await Collection();
-                    await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
-                    ResetStateInput();
+                    if (!await SendBinVerif(OpenBin.openbinname))
+                    {
+
+                        await dialogService.ShowMessageAsync("Transaction Not Finished", "Bin Offline");
+                        return;
+                    }
                 }
+
+                await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
+                ResetStateInput();
+
             }
             else if (transactionType.HasValue && transactionType.Value != TransactionType.Manual)
                 await dialogService.ShowMessageAsync("Verification Failed", "Wrong Container Bin");
