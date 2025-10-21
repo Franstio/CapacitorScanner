@@ -150,8 +150,9 @@ namespace CapacitorScanner.ViewModels
             }
             else
             {
-                ResetStateInput();
+                Scan = string.Empty;
                 await dialogService.ShowMessageAsync("Bin Error", bin?.activity == 0 ? $"Bin Overload" : bin?.status ?? "");
+                ResetStateInput();
             }
 
         }
@@ -200,9 +201,9 @@ namespace CapacitorScanner.ViewModels
                         return;
                     }
                 }
-                ResetStateInput();
+                Scan = string.Empty;
                 await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
-
+                ResetStateInput();
             }
             else if (transactionType.HasValue && transactionType.Value != TransactionType.Manual)
                 await dialogService.ShowMessageAsync("Verification Failed", "Wrong Container Bin");

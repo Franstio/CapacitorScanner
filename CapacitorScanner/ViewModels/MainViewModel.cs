@@ -1,4 +1,6 @@
-﻿using Avalonia.Threading;
+﻿using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 using CapacitorScanner.API.Model;
 using CapacitorScanner.Model;
 using CapacitorScanner.Services;
@@ -39,8 +41,15 @@ public partial class MainViewModel : ViewModelBase
     public async Task Exit()
     {
         var res = await dialogService.ShowConfirmAsync("Konfirmasi Keluar", "Apakah anda yakin untuk keluar dan melakukan proses rebooting?");
-        if (res)   
+        if (res)
+        {
             System.Diagnostics.Process.Start(new ProcessStartInfo() { FileName = "sudo", Arguments = "reboot" });
+            await Task.Delay(1000);
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                desktop.Shutdown();
+            }
+        }
     }
     [RelayCommand]
     public async Task LoadStation()
