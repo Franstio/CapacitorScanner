@@ -83,6 +83,8 @@ namespace CapacitorScanner.ViewModels
             {
                 try
                 {
+                    if (Container is not null)
+                        return;
                     var data = await Service.GetBins();
                     if (data is null)
                         return;
@@ -148,8 +150,8 @@ namespace CapacitorScanner.ViewModels
             }
             else
             {
-                await dialogService.ShowMessageAsync("Bin Error", bin?.activity == 0 ? $"Bin Overload" : bin?.status ?? "");
                 ResetStateInput();
+                await dialogService.ShowMessageAsync("Bin Error", bin?.activity == 0 ? $"Bin Overload" : bin?.status ?? "");
             }
 
         }
@@ -198,9 +200,8 @@ namespace CapacitorScanner.ViewModels
                         return;
                     }
                 }
-
-                await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
                 ResetStateInput();
+                await dialogService.ShowMessageAsync("Verification", OpenBin.activity == 1 ? "Verification Waste process" : "Verification Dispose process");
 
             }
             else if (transactionType.HasValue && transactionType.Value != TransactionType.Manual)
@@ -248,8 +249,8 @@ namespace CapacitorScanner.ViewModels
                 User.badgeno, Container.name, Bin.Name, "ONLINE", ConfigService.Config.hostname, (double)Container.weightresult, 0, res?.data[0].activity ?? "None", Container.scrapitem_name, Container.scraptype_name, Container.scrapgroup_name, User.badgeno);
             await DbService.CreateTransaction(transaction);
             string message = res?.data[0].status ?? "Error";
-            await dialogService.ShowMessageAsync("Result", message);
             ResetStateInput();
+            await dialogService.ShowMessageAsync("Result", message);
 //            LoadBins();
         }
 

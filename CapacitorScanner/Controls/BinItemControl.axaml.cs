@@ -55,7 +55,7 @@ public class BinItemControl : TemplatedControl
 
             BinHeaderClass = newvalue is not null && newvalue.scraptype_name == Bin.WasteType;
             BinButtonClass = newvalue is not null && newvalue.scraptype_name == Bin.WasteType;
-            BinRedClass = !BinButtonClass && !BinHeaderClass;
+            BinRedClass = newvalue is not null && !BinButtonClass && !BinHeaderClass;
             BinGrayClass = !BinHeaderClass && !BinRedClass;
         });
     }

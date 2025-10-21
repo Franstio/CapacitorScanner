@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -24,13 +25,22 @@ public partial class MainViewModel : ViewModelBase
 
     private readonly PIDSGService PIDSGService;
     private readonly ConfigService ConfigService;
+    private readonly DialogService dialogService;
     [ObservableProperty]
     private string time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-    public MainViewModel(PIDSGService service,ConfigService configService)
+    public MainViewModel(PIDSGService service,ConfigService configService,DialogService dialogService)
     {
         PIDSGService = service;
         ConfigService = configService;
+        this.dialogService = dialogService;
 
+    }
+    [RelayCommand]
+    public async Task Exit()
+    {
+        var res = await dialogService.ShowConfirmAsync("Konfirmasi Keluar", "Apakah anda yakin untuk keluar dan melakukan proses rebooting?");
+        if (res)   
+            System.Diagnostics.Process.Start(new ProcessStartInfo() { FileName = "sudo", Arguments = "reboot" });
     }
     [RelayCommand]
     public async Task LoadStation()
