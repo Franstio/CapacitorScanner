@@ -52,11 +52,16 @@ public class BinItemControl : TemplatedControl
         ContainerProperty.Changed.Subscribe(item =>
         {
             var newvalue = item.NewValue.Value;
-
-            BinHeaderClass = newvalue is not null && newvalue.scraptype_name == Bin.WasteType;
-            BinButtonClass = newvalue is not null && newvalue.scraptype_name == Bin.WasteType;
-            BinRedClass = newvalue is not null && !BinButtonClass && !BinHeaderClass;
-            BinGrayClass = !BinHeaderClass && !BinRedClass;
+            try
+            {
+                if (Bin is null)
+                    return;
+                BinHeaderClass = newvalue is not null && newvalue.scraptype_name == Bin.WasteType;
+                BinButtonClass = newvalue is not null && newvalue.scraptype_name == Bin.WasteType;
+                BinRedClass = newvalue is not null && !BinButtonClass && !BinHeaderClass;
+                BinGrayClass = !BinHeaderClass && !BinRedClass;
+            }
+            catch { }
         });
     }
 }
