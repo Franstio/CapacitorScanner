@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapacitorScanner", "CapacitorScanner\CapacitorScanner.csproj", "{8144B3F7-3826-A873-A269-DE3FF4CEF60A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapacitorScanner.Desktop", "CapacitorScanner.Desktop\CapacitorScanner.Desktop.csproj", "{79A720D6-803A-AAF5-AFFE-12FFEBAFBEB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapacitorScanner.Core", "CapacitorScanner.Core\CapacitorScanner.Core.csproj", "{07E66F9B-23A2-465F-9458-1D1FF153A6CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{79A720D6-803A-AAF5-AFFE-12FFEBAFBEB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79A720D6-803A-AAF5-AFFE-12FFEBAFBEB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79A720D6-803A-AAF5-AFFE-12FFEBAFBEB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07E66F9B-23A2-465F-9458-1D1FF153A6CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07E66F9B-23A2-465F-9458-1D1FF153A6CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07E66F9B-23A2-465F-9458-1D1FF153A6CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07E66F9B-23A2-465F-9458-1D1FF153A6CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

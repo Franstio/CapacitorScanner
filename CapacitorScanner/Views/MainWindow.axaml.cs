@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
+using CapacitorScanner.Core.Model;
 using CapacitorScanner.Messages;
-using CapacitorScanner.Model;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 

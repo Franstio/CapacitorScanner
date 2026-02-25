@@ -1,11 +1,11 @@
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.LogicalTree;
-using CapacitorScanner.API.Model;
-using CapacitorScanner.Model;
+using CapacitorScanner.Core.API.Model;
 using System.Windows.Input;
 using System.Reactive.Linq;
 using System;
+using CapacitorScanner.Core.Model;
 
 namespace CapacitorScanner.Controls;
 

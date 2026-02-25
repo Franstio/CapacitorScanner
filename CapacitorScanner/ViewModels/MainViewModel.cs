@@ -1,8 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
-using CapacitorScanner.API.Model;
-using CapacitorScanner.Model;
+using CapacitorScanner.Core.API.Model;
+using CapacitorScanner.Core.Services;
+using CapacitorScanner.Core.Model;
 using CapacitorScanner.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;

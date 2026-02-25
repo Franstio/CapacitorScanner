@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
-using CapacitorScanner.API.Model;
-using CapacitorScanner.Model;
+using CapacitorScanner.Core.API.Model;
+using CapacitorScanner.Core.Model;
 
 namespace CapacitorScanner.Converter
 {

@@ -2,10 +2,10 @@ using Avalonia;
 using System.Reactive;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using CapacitorScanner.Model;
 using CapacitorScanner.ViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Reactive.Linq;
+using CapacitorScanner.Core.Model;
 
 namespace CapacitorScanner.Controls;
 

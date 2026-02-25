@@ -1,4 +1,4 @@
-﻿using CapacitorScanner.Model;
+﻿using CapacitorScanner.Core.Model;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using System;
@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CapacitorScanner.Services
+namespace CapacitorScanner.Core.Services
 {
     public class SQLiteService
     {

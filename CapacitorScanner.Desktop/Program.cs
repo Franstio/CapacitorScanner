@@ -24,7 +24,6 @@ class Program
             // return builder.StartLinuxDrm(args, "/dev/dri/card1");
             return builder.StartLinuxDrm(args, "/dev/dri/card1", 1D);
         }
-
         return builder.StartWithClassicDesktopLifetime(args);
     }
 

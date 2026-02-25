@@ -1,12 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CapacitorScanner.Model
+namespace CapacitorScanner.Core.Model
 {
     public class BinModel  
     {
@@ -14,7 +13,7 @@ namespace CapacitorScanner.Model
         public string WasteType { get; set; } = string.Empty;
         public decimal Weight { get; set; } = 0;
         public decimal MaxWeight { get; set; } = 1;
-        public decimal Percentage { get => (Weight / MaxWeight) * 100; }
+        public decimal Percentage { get => Weight / MaxWeight * 100; }
         public BinModel() : base(){
             
         }

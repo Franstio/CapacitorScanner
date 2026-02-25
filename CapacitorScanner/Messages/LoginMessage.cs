@@ -1,4 +1,4 @@
-﻿using CapacitorScanner.Model;
+﻿using CapacitorScanner.Core.Model;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;

@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CapacitorScanner.API.Model
+namespace CapacitorScanner.Core.Model
 {
-    public record PayloadModel<T>(bool success, List<T> data,string result);
-
+    public record UserModel(string employeename,string logindate,string badgeno);
 }

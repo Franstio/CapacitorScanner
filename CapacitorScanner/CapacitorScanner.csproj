@@ -35,12 +35,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaResource Update="Assets\panasonic.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </AvaloniaResource>
+    <ProjectReference Include="..\CapacitorScanner.Core\CapacitorScanner.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Interfaces\" />
+    <AvaloniaResource Update="Assets\panasonic.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AvaloniaResource>
   </ItemGroup>
 </Project>

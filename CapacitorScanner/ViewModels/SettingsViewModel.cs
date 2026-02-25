@@ -1,5 +1,5 @@
-using CapacitorScanner.Model;
-using CapacitorScanner.Services;
+using CapacitorScanner.Core.Model;
+using CapacitorScanner.Core.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;

@@ -1,4 +1,4 @@
-﻿using CapacitorScanner.Model;
+﻿using CapacitorScanner.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,11 +8,11 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace CapacitorScanner.Services
+namespace CapacitorScanner.Core.Services
 {
     public class ConfigService
     {
-        private const string ConfigFile = "appsettings.json";
+        private const string ConfigFile = "appsettings_desktop.json";
 
         public ConfigModel Config { get; private set; } = new ConfigModel();
 

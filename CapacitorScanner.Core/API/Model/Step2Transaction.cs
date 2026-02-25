@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
-namespace CapacitorScanner.Model.PIDSG
+namespace CapacitorScanner.Core.API.Model
 {
-    public class CollectionActivityModel
+    public class Step2TransactionModel
     {
         [JsonPropertyName("badgeno")]
         public string? BadgeNo { get; set; }
@@ -25,9 +25,11 @@ namespace CapacitorScanner.Model.PIDSG
         public string? ToBinName { get; set; }
 
         [JsonPropertyName("weight")]
-        public string? Weight { get; set; }
+        public decimal Weight { get; set; }
 
         [JsonPropertyName("activity")]
         public string? Activity { get; set; }
+        [JsonIgnore]
+        public string? Result { get; set; }
     }
 }

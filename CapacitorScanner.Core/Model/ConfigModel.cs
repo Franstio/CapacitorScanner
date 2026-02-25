@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CapacitorScanner.Model
+namespace CapacitorScanner.Core.Model
 {
     public class ConfigModel
     {

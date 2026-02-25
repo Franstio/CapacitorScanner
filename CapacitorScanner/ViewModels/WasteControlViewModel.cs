@@ -1,8 +1,9 @@
 using Avalonia.Data;
-using CapacitorScanner.API.Model;
+using CapacitorScanner.Core.API.Model;
+using CapacitorScanner.Core.Model;
+using CapacitorScanner.Core.Services;
 using CapacitorScanner.Messages;
-using CapacitorScanner.Model;
-using CapacitorScanner.Model.PIDSG;
+using CapacitorScanner.Core.Model.PIDSG;
 using CapacitorScanner.Services;
 using CapacitorScanner.Views;
 using CommunityToolkit.Mvvm.ComponentModel;

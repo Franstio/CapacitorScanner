@@ -1,6 +1,6 @@
-﻿using CapacitorScanner.API.Model;
-using CapacitorScanner.Model;
-using CapacitorScanner.Model.PIDSG;
+﻿using CapacitorScanner.Core.API.Model;
+using CapacitorScanner.Core.Model;
+using CapacitorScanner.Core.Model.PIDSG;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,18 +14,20 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Linq;
 
-namespace CapacitorScanner.Services
+namespace CapacitorScanner.Core.Services
 {
     public class PIDSGService
     {
         private readonly ConfigService _configService;
-        public PIDSGService(ConfigService config)
+        private readonly IHttpClientFactory httpClientFactory;
+        public PIDSGService(ConfigService configService, IHttpClientFactory httpClientFactory)
         {
-            _configService = config;
+            _configService = configService;
+            this.httpClientFactory = httpClientFactory;
         }
         private HttpClient BuildHttpClient()
         {
-            HttpClient client = new HttpClient();
+            HttpClient client = httpClientFactory.CreateClient();
             client.BaseAddress = new Uri($"{_configService.Config.API_URL}");
             return client;
         }

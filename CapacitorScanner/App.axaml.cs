@@ -2,6 +2,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using CapacitorScanner.Core.Services;
 using CapacitorScanner.Services;
 using CapacitorScanner.ViewModels;
 using CapacitorScanner.Views;

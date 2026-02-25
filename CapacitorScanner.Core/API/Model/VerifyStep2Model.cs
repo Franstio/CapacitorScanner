@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CapacitorScanner.API.Model
+namespace CapacitorScanner.Core.API.Model
 {
     //{"success":true,"data":[{"activity":null,"status":"fail, Out Process"}]}
     public class VerifyStep2Model
