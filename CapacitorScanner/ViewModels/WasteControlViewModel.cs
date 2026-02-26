@@ -248,7 +248,7 @@ namespace CapacitorScanner.ViewModels
                 FromBinName = OpenBin!.openbinname,
                 LoginDate = "",
                 ToBinName = "",
-                Weight = "0"
+                Weight = 0
             };
             var res = await Service.SendTransactionPIDSG(activity);
 
