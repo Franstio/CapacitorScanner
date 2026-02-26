@@ -61,6 +61,7 @@ namespace CapacitorScanner.Api.Controllers
                 weight = dataBin.binweight,
                 lastfrombinname =   dataBin.lastfrombinname,
                 weightresult = dataBin.weight,
+                lastbadgeno = dataBin.lastbadgeno,
                 weightsystem = dataBin.weightsystem
             };
             return Ok(new {
