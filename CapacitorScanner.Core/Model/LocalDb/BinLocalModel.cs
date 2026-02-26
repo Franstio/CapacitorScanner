@@ -15,6 +15,7 @@ namespace CapacitorScanner.Core.Model.LocalDb
         public decimal binweight { get; set; } = decimal.Zero;
         public decimal weightsystem { get; set; } = decimal.Zero;
         public string lastfrombinname { get; set; } = string.Empty;
+        public string lastbadgeno { get; set; } = string.Empty;
         public string wastetype { get; set; } = string.Empty;
         public string status { get; set; } = string.Empty;  
     }

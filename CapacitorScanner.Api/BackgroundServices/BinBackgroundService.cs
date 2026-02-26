@@ -27,7 +27,8 @@ namespace CapacitorScanner.Api.BackgroundServices
                             continue;
                         foreach (var item in data)
                         {
-                            if ((await binLocalDbService.GetBin(item.name)) is null)
+                            var binData = (await binLocalDbService.GetBin(item.name));
+                            if ( binData is null)
                             {
                                 await binLocalDbService.InsertBinHost(new BinLocalModel()
                                 {
@@ -39,9 +40,17 @@ namespace CapacitorScanner.Api.BackgroundServices
                                     wastetype = item.scraptype_name,
                                     binweight = item.weight,
                                     lastfrombinname = item.lastfrombinname,
+                                    lastbadgeno = item.lastbadgeno,
                                     weightsystem = item.weightsystem
 
                                 });
+                            }
+                            else
+                            {
+                                binData.maxweight = item.capacity;
+                                binData.lastfrombinname = item.lastfrombinname;
+                                binData.lastbadgeno = item.lastbadgeno;
+                                await binLocalDbService.UpdateBin(binData);
                             }
                         }
                     }

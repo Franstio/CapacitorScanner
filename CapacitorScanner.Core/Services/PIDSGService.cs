@@ -47,7 +47,7 @@ namespace CapacitorScanner.Core.Services
                     if (name is null)
                     {
                         query["where"] = $"wastestation_name={_configService.Config.hostname}";
-                        query["select"] = "name,capacity,description,weightresult,scraptype_name,scrapitem_name";
+                        query["select"] = "name,capacity,description,weightresult,scraptype_name,scrapitem_name,lastbadgeno,lastfrombinname";
                         query["orderColumn"] = "name";
                         query["orderSort"] = "asc";
                     }

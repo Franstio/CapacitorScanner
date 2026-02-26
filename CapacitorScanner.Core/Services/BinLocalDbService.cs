@@ -118,7 +118,7 @@ namespace CapacitorScanner.Core.Services
         {
             using (var con = await GetConn())
             {
-                string query = $"Select bin,weight,binweight,maxweight,wastetype,hostname,status from binhost where bin=@bin";
+                string query = $"Select bin,weight,binweight,lastfrombinname,lastbadgeno,maxweight,wastetype,hostname,status from binhost where bin=@bin";
                 var res = await con.QueryFirstOrDefaultAsync<BinLocalModel>(query, new { bin });
                 return res;
             }
@@ -127,7 +127,7 @@ namespace CapacitorScanner.Core.Services
         {
             using (var con = await GetConn())
             {
-                string query = $"Select bin,weight,binweight,maxweight,wastetype,hostname,status from binhost";
+                string query = $"Select bin,weight,binweight,lastfrombinname,lastbadgeno,maxweight,wastetype,hostname,status from binhost";
                 var res = await con.QueryAsync<BinLocalModel>(query);
                 return res;
             }
@@ -136,7 +136,7 @@ namespace CapacitorScanner.Core.Services
         {
             using (var con = await GetConn())
             {
-                string query = $"Update binhost set weight=@weight,binweight=@binweight,wastetype=@wastetype,hostname=@hostname,status=@status where bin=@bin";
+                string query = $"Update binhost set weight=@weight,lastfrombinname=@lastfrombinname,lastbadgeno=@lastbadgeno,binweight=@binweight,wastetype=@wastetype,hostname=@hostname,status=@status where bin=@bin";
                 await con.ExecuteAsync(query, bin);
             }
 
@@ -145,7 +145,7 @@ namespace CapacitorScanner.Core.Services
         {
             using (var con = await GetConn())
             {
-                string query = $"Insert into binhost(bin,weight,binweight,maxweight,hostname,status,wastetype) values(@bin,@weight,@binweight,@maxweight,@hostname,@status,@wastetype)";
+                string query = $"Insert into binhost(bin,weight,binweight,maxweight,hostname,status,wastetype,lastfrombinname,lastbadgeno) values(@bin,@weight,@binweight,@maxweight,@hostname,@status,@wastetype,@lastfrombinname,@lastbadgeno)";
                 await con.ExecuteAsync(query, bin);
             }
         }

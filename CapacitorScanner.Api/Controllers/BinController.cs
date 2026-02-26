@@ -81,6 +81,16 @@ namespace CapacitorScanner.Api.Controllers
         [HttpPost("Transaction")]
         public async Task<IActionResult> SaveTransaction(TransactionActivityModel transaction)
         {
+            if (transaction.Activity == "Collection")
+            {
+                return Ok(new
+                {
+                    success = true,
+                    result = "Success"
+                });
+            }
+            transaction.LoginDate = DateTime.Now.ToString("yyyy-MM-dd");
+            
             ScrapTransactionModel scraprecord = new ScrapTransactionModel(-1, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), transaction.LoginDate!,
             transaction.BadgeNo!, transaction.FromBinName!, transaction.ToBinName!, "ONLINE", configService.Config.hostname, double.Parse(transaction.Weight ?? "0"), transaction.Activity!, transaction.BadgeNo!);
             var res = await pidsgService.SendTransactionPIDSG(transaction);
