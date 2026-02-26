@@ -54,7 +54,7 @@ namespace CapacitorScanner.Api.Controllers
                 return NotFound();
             var response = new
             {
-                doorstatus = (dataBin.status == "" ? 0 : (dataBin.status == "Dispose" ? 1 : 0)),
+                doorstatus = (dataBin.status == "" ? 0 : (dataBin.status == "Dispose" ? 1 : 2)),
                 capacity = dataBin.maxweight,
                 isactivated = "1",
                 name  = dataBin.bin,
