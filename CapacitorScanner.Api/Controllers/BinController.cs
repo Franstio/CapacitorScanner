@@ -84,6 +84,7 @@ namespace CapacitorScanner.Api.Controllers
         {
             if (transaction.Activity == "Collection")
             {
+                await _binLocalDbService.UpdateStatusBin("", transaction.ToBinName!);
                 return Ok(new
                 {
                     success = true,
