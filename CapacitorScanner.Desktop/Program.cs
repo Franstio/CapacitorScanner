@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-
+using System.Threading.Tasks;
 using Avalonia;
 
 namespace CapacitorScanner.Desktop;
@@ -11,6 +11,7 @@ class Program
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
+    private static Task WebTask = null!;
     [STAThread]
     public static int Main(string[] args)
     {
@@ -24,6 +25,7 @@ class Program
             // return builder.StartLinuxDrm(args, "/dev/dri/card1");
             return builder.StartLinuxDrm(args, "/dev/dri/card1", 1D);
         }
+        WebTask = Task.Run(()=>CapacitorScanner.Api.Program.Main([]));
         return builder.StartWithClassicDesktopLifetime(args);
     }
 

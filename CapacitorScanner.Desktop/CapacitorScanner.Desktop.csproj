@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CapacitorScanner.Api\CapacitorScanner.Api.csproj" />
     <ProjectReference Include="..\CapacitorScanner\CapacitorScanner.csproj" />
   </ItemGroup>
 
