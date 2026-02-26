@@ -79,11 +79,7 @@ namespace CapacitorScanner.Core.Services
                     status,
                     host,
                     weightresult,
-                    doorstatus,
                     activity,
-                    scrapitem_name,
-                    scraptype_name,
-                    scrapgroup_name,
                     lastbadgeno
                 ) VALUES (
                     @TransactionDate,
@@ -94,11 +90,7 @@ namespace CapacitorScanner.Core.Services
                     @Status,
                     @Host,
                     @WeightResult,
-                    @DoorStatus,
                     @Activity,
-                    @ScrapItemName,
-                    @ScrapTypeName,
-                    @ScrapGroupName,
                     @LastBadgeno
                 );", transaction);
             }
@@ -161,7 +153,7 @@ namespace CapacitorScanner.Core.Services
         {
             using (var con = await GetConn())
             {
-                string query = $"Select id,transaction_date as TransactionDate,login_date as LoginDate,badgeno as BadgeNo,container as Container,bin as Bin,status as Status,host as Host,weighresult as WeightResult,activity as Activity,lastbadgeno as LastBadgeNo from scraptransaction" +
+                string query = $"Select id,transaction_date as TransactionDate,login_date as LoginDate,badgeno as BadgeNo,container as Container,bin as Bin,status as Status,host as Host,weightresult as WeightResult,activity as Activity,lastbadgeno as LastBadgeNo from scraptransaction" +
                     $" where status != 'FAILED'";
 
                 return await con.QueryAsync<ScrapTransactionModel>(query);

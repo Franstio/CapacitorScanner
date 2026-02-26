@@ -73,9 +73,10 @@ namespace CapacitorScanner.Core.Services
                 try
                 {
                     var builder = new UriBuilder(client.BaseAddress!);
-                    var test = await client.PostAsJsonAsync("pidatalog",model);
+                    var test = await client.PostAsJsonAsync("pid/pidatalog",model);
                     Console.WriteLine(test.RequestMessage?.RequestUri);
-                    Console.WriteLine("Transaction Result: "+ await test.Content.ReadAsStringAsync());
+                    string res = await test.Content.ReadAsStringAsync();
+                    Console.WriteLine("Transaction Result: "+res);
                     Console.WriteLine(JsonSerializer.Serialize(model));
                     return true;
                 }

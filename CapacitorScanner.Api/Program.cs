@@ -12,7 +12,7 @@ namespace CapacitorScanner.Api
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddApplicationPart(typeof(Api.Program).Assembly);
             var configService = new ConfigService();
             configService.LoadAsync();
             builder.Services.AddSingleton<ConfigService>(configService);
@@ -40,7 +40,7 @@ namespace CapacitorScanner.Api
             builder.Services.AddHostedService<TransactionBackgroundService>();
             var app = builder.Build();
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() || true)
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
@@ -53,7 +53,7 @@ namespace CapacitorScanner.Api
 
             var sqliteservice = app.Services.CreateScope().ServiceProvider.GetRequiredService<BinLocalDbService>();
             _ = Task.Run(sqliteservice.Initialization);
-            app.Run();
+            app.RunAsync();
         }
     }
 }

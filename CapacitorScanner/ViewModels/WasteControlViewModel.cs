@@ -168,7 +168,7 @@ namespace CapacitorScanner.ViewModels
             OpenBin = bin;
             if (bin is null) return;
             await DbService.UpdateStatusBin(bin.activity == 1 ? "Dispose" : "Collection", bin.openbinname);
-            if (activity.Contains(bin.activity))
+            if (activity.Contains(bin.activity) && bin.openbinname.ToLower() != "nothing")
             {
                 transactionType = bin.activity == 1 ? TransactionType.Dispose : TransactionType.Collection;
                 Message = $"Verification {transactionType.ToString()}\nScan QR Code Container bin";
@@ -220,10 +220,10 @@ namespace CapacitorScanner.ViewModels
                 }
                 else 
                 {
-                    if (binData.status != "")
+                    if (await SendBinVerif(OpenBin.openbinname))
                     {
 
-                        await dialogService.ShowMessageAsync("Transaction Not Finished", "Bin Offline");
+                        await dialogService.ShowMessageAsync("Transaction Not Finished", "Bin Not Finished");
                         return;
                     }
                 }
@@ -250,7 +250,13 @@ namespace CapacitorScanner.ViewModels
                 ToBinName = "",
                 Weight = "0"
             };
-            await Service.SendTransactionPIDSG(activity);
+            var res = await Service.SendTransactionPIDSG(activity);
+
+            ScrapTransactionModel transaction = new ScrapTransactionModel(-1, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), loginDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                User.badgeno, Container!.name, OpenBin.openbinname, "ONLINE", ConfigService.Config.hostname, (double)0, "Collection", User.badgeno);
+            transaction.Status = res ? "SUCCESS" : "FAILED";
+            await DbService.CreateTransaction(transaction);
+            await DbService.UpdateStatusBin("", OpenBin.openbinname);
         }
         [RelayCommand]
         public async Task WasteProcess()
