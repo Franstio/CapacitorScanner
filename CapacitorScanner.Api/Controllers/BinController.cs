@@ -93,7 +93,7 @@ namespace CapacitorScanner.Api.Controllers
             transaction.LoginDate = DateTime.Now.ToString("yyyy-MM-dd");
             
             ScrapTransactionModel scraprecord = new ScrapTransactionModel(-1, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), transaction.LoginDate!,
-            transaction.BadgeNo!, transaction.FromBinName!, transaction.ToBinName!, "ONLINE", configService.Config.hostname, double.Parse(transaction.Weight ?? "0"), transaction.Activity!, transaction.BadgeNo!);
+            transaction.BadgeNo!, transaction.FromBinName!, transaction.ToBinName!, "ONLINE", configService.Config.hostname,Convert.ToDouble( transaction.Weight?.ToString("0.00") ?? "0") , transaction.Activity!, transaction.BadgeNo!);
             var res = await pidsgService.SendTransactionPIDSG(transaction);
             scraprecord.Status = res ? "SUCCESS" : "FAILED";
             await _binLocalDbService.UpdateStatusBin("", transaction.ToBinName!);

@@ -35,7 +35,7 @@ namespace CapacitorScanner.Api.BackgroundServices
                                 LoginDate = transaction.LoginDate,
                                 StationName = configService.Config.hostname,
                                 ToBinName = transaction.Bin,
-                                Weight = transaction.WeightResult.ToString("{0.00}")
+                                Weight = Convert.ToDecimal(transaction.WeightResult.ToString("0.00"))
                             });
                             await binLocalDbService.UpdateStatus(res ? "SUCCESS - OFFLINE" : "FAILED",transaction.Id);
                         }
