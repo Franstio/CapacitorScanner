@@ -53,7 +53,7 @@ namespace CapacitorScanner.Api
 
             var sqliteservice = app.Services.CreateScope().ServiceProvider.GetRequiredService<BinLocalDbService>();
             _ = Task.Run(sqliteservice.Initialization);
-            app.RunAsync();
+            app.RunAsync("http://*:5000");
         }
     }
 }
