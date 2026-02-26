@@ -1,4 +1,4 @@
-﻿using CapacitorScanner.Core.Model;
+﻿using CapacitorScanner.Core.Model.LocalDb;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;

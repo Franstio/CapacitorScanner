@@ -1,5 +1,5 @@
 ﻿using Avalonia.Controls;
-using CapacitorScanner.Core.Model;
+using CapacitorScanner.Core.Model.LocalDb;
 using CapacitorScanner.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 using System;

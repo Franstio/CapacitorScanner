@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CapacitorScanner.Core.Model
+namespace CapacitorScanner.Core.Model.LocalDb
 {
     public class LoginModel
     {

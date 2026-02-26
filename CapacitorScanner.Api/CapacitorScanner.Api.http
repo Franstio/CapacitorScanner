@@ -1,0 +1,6 @@
+@CapacitorScanner.Api_HostAddress = http://localhost:5237
+
+GET {{CapacitorScanner.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

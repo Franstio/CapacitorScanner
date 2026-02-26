@@ -1,4 +1,4 @@
-using CapacitorScanner.Core.Model;
+using CapacitorScanner.Core.Model.LocalDb;
 using CapacitorScanner.Core.Services;
 using CapacitorScanner.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,9 +17,9 @@ namespace CapacitorScanner.ViewModels
         [ObservableProperty]
         private LoginModel user = new LoginModel();
 
-        private SQLiteService _service;
+        private BinLocalDbService _service;
         private AppState _state;
-        public LoginViewModel(SQLiteService dbservice,AppState state)
+        public LoginViewModel(BinLocalDbService dbservice,AppState state)
         {
             _service = dbservice;
             _state = state;

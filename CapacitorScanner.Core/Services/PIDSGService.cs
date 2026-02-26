@@ -1,8 +1,10 @@
 ﻿using CapacitorScanner.Core.API.Model;
 using CapacitorScanner.Core.Model;
+using CapacitorScanner.Core.Model.LocalDb;
 using CapacitorScanner.Core.Model.PIDSG;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
@@ -29,6 +31,8 @@ namespace CapacitorScanner.Core.Services
         {
             HttpClient client = httpClientFactory.CreateClient();
             client.BaseAddress = new Uri($"{_configService.Config.API_URL}");
+            //string text = "root:00000000";
+            //client.DefaultRequestHeaders.Add("Authorization",Convert.ToBase64String(Encoding.UTF8.GetBytes(text)));
             return client;
         }
         public async Task<List<ContainerBinModel>?> GetBins(string? name=null)
@@ -62,7 +66,7 @@ namespace CapacitorScanner.Core.Services
                 }
             }
         }
-        public async Task SendCollection(CollectionActivityModel model)
+        public async Task<bool> SendTransactionPIDSG(TransactionActivityModel model)
         {
             using (var client = BuildHttpClient())
             {
@@ -71,12 +75,15 @@ namespace CapacitorScanner.Core.Services
                     var builder = new UriBuilder(client.BaseAddress!);
                     var test = await client.PostAsJsonAsync("pidatalog",model);
                     Console.WriteLine(test.RequestMessage?.RequestUri);
-                    Console.WriteLine(await test.Content.ReadAsStringAsync());
+                    Console.WriteLine("Transaction Result: "+ await test.Content.ReadAsStringAsync());
                     Console.WriteLine(JsonSerializer.Serialize(model));
+                    return true;
                 }
-                catch
+                catch (Exception e)
                 {
-                    throw;
+
+                    Console.WriteLine($"Transaction Failed: {e.Message}");
+                    return false;
                 }
             }
         }
@@ -180,6 +187,30 @@ namespace CapacitorScanner.Core.Services
             {
                 Trace.TraceError(ex.Message + " | " + ex.StackTrace);
                 return null;
+            }
+        }
+        public async Task SendWeight(string binname, decimal weight)
+        {
+            try
+            {
+                using (var client = BuildHttpClient())
+                {
+                    var builder = new UriBuilder(client.BaseAddress!);
+                    var query = HttpUtility.ParseQueryString(builder.Query);
+                    builder.Path += "pid/sendWeight";
+                    builder.Query = query.ToString();
+
+                    var payload = new
+                    {
+                        binname,
+                        weight = weight.ToString("0.00")
+                    }; 
+                    var json = await client.PostAsJsonAsync(builder.ToString(),payload);
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.Message + " | " + ex.StackTrace);
             }
         }
     }

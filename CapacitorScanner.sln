@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapacitorScanner.Desktop", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapacitorScanner.Core", "CapacitorScanner.Core\CapacitorScanner.Core.csproj", "{07E66F9B-23A2-465F-9458-1D1FF153A6CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapacitorScanner.Api", "CapacitorScanner.Api\CapacitorScanner.Api.csproj", "{01B1E0C7-8DD9-4F64-82D9-16DC748E1966}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{07E66F9B-23A2-465F-9458-1D1FF153A6CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07E66F9B-23A2-465F-9458-1D1FF153A6CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07E66F9B-23A2-465F-9458-1D1FF153A6CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01B1E0C7-8DD9-4F64-82D9-16DC748E1966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01B1E0C7-8DD9-4F64-82D9-16DC748E1966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01B1E0C7-8DD9-4F64-82D9-16DC748E1966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01B1E0C7-8DD9-4F64-82D9-16DC748E1966}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

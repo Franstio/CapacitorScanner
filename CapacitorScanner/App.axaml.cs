@@ -19,7 +19,7 @@ public static class ServiceCollectionExtension
         Type[] viewmodels = [typeof(MainViewModel), typeof(WasteControlViewModel),typeof(BinControlViewModel),typeof(SettingsViewModel),typeof(LoginViewModel)];
         foreach (var viewmodel in viewmodels)
             services.AddSingleton(viewmodel);
-        Type[] service = [typeof(PIDSGService),typeof(SQLiteService)];
+        Type[] service = [typeof(PIDSGService),typeof(BinLocalDbService)];
         foreach (var viewmodel in service)
             services.AddScoped(viewmodel);
         ConfigService configService = new ConfigService();
@@ -61,7 +61,7 @@ public partial class App : Application
         ServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection.AddCommonServices();
         Services = serviceCollection.BuildServiceProvider();
-        _ = Task.Run(async ()=>await Services.GetRequiredService<SQLiteService>().Initialization());
+        _ = Task.Run(async ()=>await Services.GetRequiredService<BinLocalDbService>().Initialization());
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow

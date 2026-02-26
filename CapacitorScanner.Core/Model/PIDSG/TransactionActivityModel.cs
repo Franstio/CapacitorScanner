@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CapacitorScanner.Core.Model.PIDSG
 {
-    public class CollectionActivityModel
+    public class TransactionActivityModel
     {
         [JsonPropertyName("badgeno")]
         public string? BadgeNo { get; set; }

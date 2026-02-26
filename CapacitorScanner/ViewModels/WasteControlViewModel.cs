@@ -25,6 +25,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Web;
+using CapacitorScanner.Core.Model.LocalDb;
 
 namespace CapacitorScanner.ViewModels
 {
@@ -32,7 +33,7 @@ namespace CapacitorScanner.ViewModels
     {
         private readonly PIDSGService Service;
         private readonly ConfigService ConfigService;   
-        private readonly SQLiteService DbService;
+        private readonly BinLocalDbService DbService;
         private readonly DialogService dialogService;
         private HttpClient httpClient;
         private enum TransactionType
@@ -64,7 +65,7 @@ namespace CapacitorScanner.ViewModels
         
         private DateTime loginDate = DateTime.Now;
         
-        public WasteControlViewModel(PIDSGService service,SQLiteService _db,ConfigService config,DialogService dialogService,HttpClient client) 
+        public WasteControlViewModel(PIDSGService service,BinLocalDbService _db,ConfigService config,DialogService dialogService,HttpClient client) 
         {
             Service = service;
             DbService = _db; 
@@ -86,17 +87,40 @@ namespace CapacitorScanner.ViewModels
                 {
                     if (Container is not null)
                         return;
-                    var data = await Service.GetBins();
-                    if (data is null)
-                        return;
-                    Bins.Clear();
-                    var _data = data.Select(x => new BinModel(x.name, x.scraptype_name, x.weightresult, x.capacity)).OrderBy(x => x.Name);
-                    foreach (var item in _data)
-                        Bins.Add(item);
+//                    bool resultServer = await LoadBinFromPidsg();
+  //                  if (!resultServer) 
+                        await LoadBinFromLocal();
+
                 }
                 catch { }
             },null,0,3000);
 
+        }
+        async Task<bool> LoadBinFromPidsg()
+        {
+            var data = await Service.GetBins();
+            if (data is null)
+                return false;
+            Bins.Clear();
+            var _data = data.Select(x => new BinModel(x.name, x.scraptype_name, x.weightresult, x.capacity)).OrderBy(x => x.Name);
+            foreach (var item in _data)
+            {
+                Bins.Add(item);
+            }
+            return true;
+        }
+        async Task<bool> LoadBinFromLocal()
+        {
+            var data = await DbService.GetBin();
+            if (!data.Any())
+                return false;
+            Bins.Clear();
+            var _data = data.Select(x => new BinModel(x.bin, x.wastetype, x.weight, x.maxweight)).OrderBy(x => x.Name);
+            foreach (var item in _data)
+            {
+                Bins.Add(item);
+            }
+            return true;
         }
         void ResetStateInput(string message = "Scan Badge ID")
         {
@@ -143,7 +167,7 @@ namespace CapacitorScanner.ViewModels
             var bin = await Service.AutoProcessBinActivity(User.badgeno, Scan);
             OpenBin = bin;
             if (bin is null) return;
-
+            await DbService.UpdateStatusBin(bin.activity == 1 ? "Dispose" : "Collection", bin.openbinname);
             if (activity.Contains(bin.activity))
             {
                 transactionType = bin.activity == 1 ? TransactionType.Dispose : TransactionType.Collection;
@@ -187,15 +211,16 @@ namespace CapacitorScanner.ViewModels
         {
             if (User is null || OpenBin is null)
                 throw new Exception("Invalid Input");
+            var binData = await DbService.GetBin(OpenBin.openbinname);
             if (OpenBin.openbinname == Scan && transactionType.HasValue && transactionType.Value != TransactionType.Manual)
             {
                 if (transactionType.HasValue && transactionType.Value == TransactionType.Collection)
                 {
-//                    await Collection();
+                    await Collection();
                 }
-                else
+                else 
                 {
-                    if (!await SendBinVerif(OpenBin.openbinname))
+                    if (binData.status != "")
                     {
 
                         await dialogService.ShowMessageAsync("Transaction Not Finished", "Bin Offline");
@@ -215,7 +240,7 @@ namespace CapacitorScanner.ViewModels
             if (User is null || OpenBin is null)
                 throw new Exception("Invalid input");
             var station = (await Service.GetStationInfo())!.First();
-            var activity = new CollectionActivityModel()
+            var activity = new TransactionActivityModel()
             {
                 BadgeNo = User!.badgeno,
                 Activity = "Collection",
@@ -225,7 +250,7 @@ namespace CapacitorScanner.ViewModels
                 ToBinName = "",
                 Weight = "0"
             };
-            await Service.SendCollection(activity);
+            await Service.SendTransactionPIDSG(activity);
         }
         [RelayCommand]
         public async Task WasteProcess()
@@ -247,8 +272,8 @@ namespace CapacitorScanner.ViewModels
             if (Bin is null || Container is null || User is null)
                 return;
             var res = await Service.VerifyStep2(User.badgeno, Container.name, Bin.Name);
-            ScrapTransaction transaction = new ScrapTransaction(-1, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), loginDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                User.badgeno, Container.name, Bin.Name, "ONLINE", ConfigService.Config.hostname, (double)Container.weightresult, 0, res?.data[0].activity ?? "None", Container.scrapitem_name, Container.scraptype_name, Container.scrapgroup_name, User.badgeno);
+            ScrapTransactionModel transaction = new ScrapTransactionModel(-1, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), loginDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                User.badgeno, Container.name, Bin.Name, "ONLINE", ConfigService.Config.hostname, (double)Container.weightresult, res?.data[0].activity ?? "None", User.badgeno);
             await DbService.CreateTransaction(transaction);
             string message = res?.data[0].status ?? "Error";
             ResetStateInput();
