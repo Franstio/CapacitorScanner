@@ -25,7 +25,7 @@ namespace CapacitorScanner.Core.Model.PIDSG
         public string? ToBinName { get; set; }
 
         [JsonPropertyName("weight")]
-        public string? Weight { get; set; }
+        public decimal? Weight { get; set; }
 
         [JsonPropertyName("activity")]
         public string? Activity { get; set; }
