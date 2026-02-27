@@ -29,13 +29,15 @@ public partial class MainViewModel : ViewModelBase
     private readonly PIDSGService PIDSGService;
     private readonly ConfigService ConfigService;
     private readonly DialogService dialogService;
+    private readonly BinLocalDbService binLocalDbService;
     [ObservableProperty]
     private string time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-    public MainViewModel(PIDSGService service,ConfigService configService,DialogService dialogService)
+    public MainViewModel(PIDSGService service,ConfigService configService,DialogService dialogService,BinLocalDbService binLocalDbService)
     {
         PIDSGService = service;
         ConfigService = configService;
         this.dialogService = dialogService;
+        this.binLocalDbService = binLocalDbService;
 
     }
     [RelayCommand]
@@ -55,7 +57,8 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task LoadStation()
     {
-        StationName = (await PIDSGService.GetStationInfo())?.FirstOrDefault()?.description ?? StationName;
+        var s = (await binLocalDbService.GetStationInfoLocal("description")).FirstOrDefault()?.datavalue;
+        StationName = (await binLocalDbService.GetStationInfoLocal("description"))?.FirstOrDefault()?.datavalue ?? StationName;
         MachineName = ConfigService.Config.hostname;
         DispatcherTimer timer = new DispatcherTimer(),timer2 = new DispatcherTimer();
         timer.Interval = TimeSpan.FromSeconds(1);
@@ -66,7 +69,7 @@ public partial class MainViewModel : ViewModelBase
         timer.Start();
         timer2.Interval = TimeSpan.FromSeconds(5);
         timer2.Tick += async (_, _) => {
-            StationName = (await PIDSGService.GetStationInfo())?.FirstOrDefault()?.description ?? StationName;
+            StationName = (await binLocalDbService.GetStationInfoLocal("description"))?.FirstOrDefault()?.datavalue ?? StationName;
             MachineName = ConfigService.Config.hostname;
         };
         timer2.Start();

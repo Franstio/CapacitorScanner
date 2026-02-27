@@ -154,17 +154,17 @@ namespace CapacitorScanner.Core.Services
             using (var con = await GetConn())
             {
                 string query = $"Select id,transaction_date as TransactionDate,login_date as LoginDate,badgeno as BadgeNo,container as Container,bin as Bin,status as Status,host as Host,weightresult as WeightResult,activity as Activity,lastbadgeno as LastBadgeNo from scraptransaction" +
-                    $" where status = 'FAILED'";
+                    $" where status = 'FAILED' order by datetime(transaction_date) asc";
 
                 return await con.QueryAsync<ScrapTransactionModel>(query);
             }
         }
-        public async Task UpdateStatus(string status,int id)
+        public async Task UpdateStatus(string status, int id)
         {
             using (var con = await GetConn())
             {
                 string query = $"Update scraptransaction set status=@status where id=@id";
-                await con.ExecuteAsync(query, new { status, id });  
+                await con.ExecuteAsync(query, new { status, id });
             }
         }
         public async Task UpdateStatusBin(string status, string bin)
@@ -172,7 +172,78 @@ namespace CapacitorScanner.Core.Services
             using (var con = await GetConn())
             {
                 string query = $"Update binhost set status=@status where bin=@bin";
-                await con.ExecuteAsync(query, new { status, bin});
+                await con.ExecuteAsync(query, new { status, bin });
+            }
+        }
+        public async Task DeleteBin(string bin)
+        {
+            using (var con = await GetConn())
+            {
+                string query = $"delete from binhost where bin=@bin";
+                await con.ExecuteAsync(query, new { bin });
+            }
+        }
+        public async Task<IEnumerable<StationInfoLocalModel>> GetStationInfoLocal(string? property = null)
+        {
+            using (var con = await GetConn())
+            {
+                string query = $"Select id,property,datavalue from station where property like @property";
+                return await con.QueryAsync<StationInfoLocalModel>(query, new { property = $"%{property}%" });
+            }
+        }
+        public async Task AddOrUpdateStationInfoLocal(StationInfoLocalModel stationInfoLocal)
+        {
+            var stationData = await GetStationInfoLocal(stationInfoLocal.property);
+            using (var con = await GetConn())
+            {
+                string query = "";
+                if (stationData.Any())
+                {
+                    query = $"Update station set datavalue=@datavalue where property=@property";
+                }
+                else
+                {
+                    query = $"Insert into station(property,datavalue) values(@property,@datavalue)";
+                }
+                await con.ExecuteAsync(query, stationInfoLocal);
+            }
+        }
+        public async Task InsertEmployee(EmployeeLocalModel employeeLocalModel)
+        {
+            var check = await GetEmployee(employeeLocalModel.badgeno);
+            if (check.Any())
+                return;
+            using (var con = await GetConn())
+            {
+                await con.ExecuteAsync($"Insert into employee(employeename,badgeno,registerdate) values(@employeename,@badgeno,@registerdate)", employeeLocalModel);
+            }
+        }
+        public async Task<IEnumerable<EmployeeLocalModel>> GetEmployee(string? badgeNo = null)
+        {
+            using (var con = await GetConn())
+            {
+                string query = $"Select id,employeename,badgeno,registerdate from employee where badgeno=@badgeNo";
+                return await con.QueryAsync<EmployeeLocalModel>(query, new { badgeNo });
+            }
+        }
+        public async Task<ContainerBinLocalModel?> GetContainerBinLocal(string? name = null)
+        {
+            using (var con = await GetConn())
+            {
+                string query = $"Select activity,name,description,scrapitem_name,scraptype_name,weight,capacity,weightresult,weightsystem,wastestation_name,department_name,logindate,doorstatus,lastfrombinname,url,scrapgroup_name,lastbadgeno from containerbin where name=@name";
+                return await con.QueryFirstOrDefaultAsync<ContainerBinLocalModel>(query, new { name });
+            }
+        }
+        public async Task InsertContainerBinLocal(ContainerBinLocalModel model)
+        {
+            var containerLocal = await GetContainerBinLocal(model.name);
+            if (containerLocal is not null)
+                return;
+            using (var con = await GetConn())
+            {
+                string query = $"Insert into containerbin(activity,name,description,scrapitem_name,scraptype_name,weight,capacity,weightresult,weightsystem,wastestation_name,department_name,logindate,doorstatus,lastfrombinname,url,scrapgroup_name,lastbadgeno) " +
+                    $"values(@activity,@name,@description,@scrapitem_name,@scraptype_name,@weight,@capacity,@weightresult,@weightsystem,@wastestation_name,@department_name,@logindate,@doorstatus,@lastfrombinname,@url,@scrapgroup_name,@lastbadgeno)";
+                await con.ExecuteAsync(query, model);
             }
         }
     }

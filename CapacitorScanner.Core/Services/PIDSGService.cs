@@ -60,9 +60,10 @@ namespace CapacitorScanner.Core.Services
                     var data = await client.GetFromJsonAsync<PayloadModel<ContainerBinModel>>(builder.ToString());
                     return data?.data;
                 }
-                catch 
+                catch (Exception ex) 
                 {
-                    throw;
+                    Console.WriteLine(ex.Message + " "+ ex.InnerException);
+                    return null;
                 }
             }
         }
