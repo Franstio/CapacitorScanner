@@ -144,8 +144,12 @@ namespace CapacitorScanner.ViewModels
             loginDate = DateTime.Now;
             if (User is not null)
             {
-                await dialogService.ShowMessageAsync("Scan Failed", "User Not Found");
                 Message = "Scan QR Code Sampah";
+            }
+            else
+            {
+
+                await dialogService.ShowMessageAsync("Scan Failed", "User Not Found");
             }
         }
         async Task ContainerScan()
