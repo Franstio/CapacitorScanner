@@ -154,7 +154,7 @@ namespace CapacitorScanner.Core.Services
             using (var con = await GetConn())
             {
                 string query = $"Select id,transaction_date as TransactionDate,login_date as LoginDate,badgeno as BadgeNo,container as Container,bin as Bin,status as Status,host as Host,weightresult as WeightResult,activity as Activity,lastbadgeno as LastBadgeNo from scraptransaction" +
-                    $" where status = 'FAILED'";
+                    $" where status = 'FAILED' order by datetime(transaction_date) asc";
 
                 return await con.QueryAsync<ScrapTransactionModel>(query);
             }
@@ -224,6 +224,26 @@ namespace CapacitorScanner.Core.Services
             {
                 string query = $"Select id,employeename,badgeno,registerdate from employee where badgeno=@badgeNo";
                 return await con.QueryAsync<EmployeeLocalModel>(query, new { badgeNo });
+            }
+        }
+        public async Task<ContainerBinLocalModel?> GetContainerBinLocal(string? name = null)
+        {
+            using (var con = await GetConn())
+            {
+                string query = $"Select activity,name,description,scrapitem_name,scraptype_name,weight,capacity,weightresult,weightsystem,wastestation_name,department_name,logindate,doorstatus,lastfrombinname,url,scrapgroup_name,lastbadgeno from containerbin where name=@name";
+                return await con.QueryFirstOrDefaultAsync<ContainerBinLocalModel>(query, new { name });
+            }
+        }
+        public async Task InsertContainerBinLocal(ContainerBinLocalModel model)
+        {
+            var containerLocal = await GetContainerBinLocal(model.name);
+            if (containerLocal is not null)
+                return;
+            using (var con = await GetConn())
+            {
+                string query = $"Insert into containerbin(activity,name,description,scrapitem_name,scraptype_name,weight,capacity,weightresult,weightsystem,wastestation_name,department_name,logindate,doorstatus,lastfrombinname,url,scrapgroup_name,lastbadgeno) " +
+                    $"values(@activity,@name,@description,@scrapitem_name,@scraptype_name,@weight,@capacity,@weightresult,@weightsystem,@wastestation_name,@department_name,@logindate,@doorstatus,@lastfrombinname,@url,@scrapgroup_name,@lastbadgeno)";
+                await con.ExecuteAsync(query, model);
             }
         }
     }

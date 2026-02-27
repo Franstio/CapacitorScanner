@@ -40,3 +40,25 @@ binweight real,
 hostname TEXT,
 status TEXT
 );
+
+
+CREATE TABLE IF NOT EXISTS containerbin (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT ,
+    description TEXT ,
+    scrapitem_name TEXT ,
+    scraptype_name TEXT ,
+    weight NUMERIC ,
+    capacity NUMERIC ,
+    weightresult NUMERIC ,
+    weightsystem NUMERIC ,
+    wastestation_name TEXT ,
+    department_name TEXT ,
+    logindate TEXT,           
+    doorstatus INTEGER,       
+    lastfrombinname TEXT ,
+    url TEXT ,
+    scrapgroup_name TEXT ,
+    lastbadgeno TEXT ,
+    activity TEXT 
+);

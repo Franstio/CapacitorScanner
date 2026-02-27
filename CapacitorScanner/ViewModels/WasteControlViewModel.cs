@@ -133,10 +133,10 @@ namespace CapacitorScanner.ViewModels
 
         public async Task<ContainerBinModel?> LoadContainerBin(string binName)
         {
-            var data = await Service.GetBins(binName);
+            var data = (await Service.GetBins(binName)) ;
             Console.WriteLine(JsonSerializer.Serialize( data));
-            Container = data?.FirstOrDefault();
-            return data?.FirstOrDefault();
+            var ret = Container = data?.FirstOrDefault() ?? (await DbService.GetContainerBinLocal(Scan))?.ToApiModel();
+            return ret;
         }
         async Task HandleLogin()
         {
@@ -172,22 +172,50 @@ namespace CapacitorScanner.ViewModels
                 return;
             }
             if (IsAuto)
-                await ContainerAuto();
+                await ContainerAuto(container);
             else
                 await ContainerManual();
         }
-        async Task ContainerAuto()
+        private async Task<BinActivityModel?> LocalAutoProcessBinActivity(ContainerBinModel container)
+        {
+            var localContainer = await DbService.GetContainerBinLocal(container.name);
+            if (localContainer is null)
+                return null;
+            if (localContainer.activity == "Collection")
+            {
+                return new BinActivityModel()
+                {
+                    activity = 2,
+                    openbinname = Scan,
+                    status = "OK"
+                };
+            }
+            else
+            {
+                var bins = Bins.Where(x => x.WasteType == localContainer.scraptype_name && x.Percentage <= 80).FirstOrDefault();
+                return bins is null ? null : new BinActivityModel()
+                {
+                    activity = 1,
+                    openbinname = bins.Name,
+                    status = "OK"
+                };
+            }
+        }
+        async Task ContainerAuto(ContainerBinModel containerBin)
         {
             if (User is null)
                 throw new Exception("User haven't login yet");
             int[] activity = [1, 2];
 
-            var bin = await Service.AutoProcessBinActivity(User.badgeno, Scan);
+            var bin = await Service.AutoProcessBinActivity(User.badgeno, Scan) ?? await LocalAutoProcessBinActivity(containerBin);
             OpenBin = bin;
             if (bin is null) return;
             await DbService.UpdateStatusBin(bin.activity == 1 ? "Dispose" : "Collection", bin.openbinname);
             if (activity.Contains(bin.activity) && bin.openbinname.ToLower() != "nothing")
             {
+                var localContainer = containerBin.ToLocalModel();
+                localContainer.activity = bin.activity == 1 ? "Dispose" : "Collection";
+                await DbService.InsertContainerBinLocal(localContainer);
                 transactionType = bin.activity == 1 ? TransactionType.Dispose : TransactionType.Collection;
                 Message = $"Verification {transactionType.ToString()}\nScan QR Code Container bin";
             }
@@ -208,21 +236,22 @@ namespace CapacitorScanner.ViewModels
         }
         async Task<bool> SendBinVerif(string bin)
         {
-            string binhost = await DbService.GetHostname(bin);
-            string token = $"root:00000000";
-            string base64token = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
-            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, $"https://{binhost}/verifikasi?verifikasi=1");
-            req.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64token}");
             try
             {
+                string binhost = await DbService.GetHostname(bin);
+                string token = $"root:00000000";
+                string base64token = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
+                HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, $"https://{binhost}/verifikasi?verifikasi=1");
+                req.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64token}");
+
                 var res = await httpClient.SendAsync(req);
                 res.EnsureSuccessStatusCode();
                 return true;
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine   (ex.Message);
-                    return false;
+                Console.WriteLine(ex.Message);
+                return false;
             }
         }
         async Task Verification()
@@ -257,7 +286,6 @@ namespace CapacitorScanner.ViewModels
         {
             if (User is null || OpenBin is null)
                 throw new Exception("Invalid input");
-            var station = (await Service.GetStationInfo())!.First();
             var activity = new TransactionActivityModel()
             {
                 BadgeNo = User!.badgeno,
