@@ -17,8 +17,17 @@ id integer primary key autoincrement,
 username text,
 password text
 );
-
-
+CREATE table station(
+id integer primary key autoincrement,
+property text,
+datavalue text
+);
+CREATE table employee(
+id integer primary key autoincrement,
+employeename text,
+badgeno text,
+registerdate text
+);
 CREATE TABLE binhost(
 bin TEXT primary key,
 weight real,

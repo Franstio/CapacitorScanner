@@ -142,10 +142,25 @@ namespace CapacitorScanner.ViewModels
         {
             User = await Service.LoginUser(Scan);
             loginDate = DateTime.Now;
+            if (User is null)
+            {
+                var localUsr = (await DbService.GetEmployee(Scan)).FirstOrDefault();
+                if (localUsr != null)
+                    User = new UserModel(localUsr.employeename,loginDate.ToString("yyyy-MM-dd"),localUsr.badgeno);
+            }
             if (User is not null)
             {
-                await dialogService.ShowMessageAsync("Scan Failed", "User Not Found");
+                await DbService.InsertEmployee(new EmployeeLocalModel()
+                {
+                    badgeno = User.badgeno,
+                    employeename = User.employeename,
+                    registerdate = loginDate.ToString("yyyy-MM-dd")
+                });
                 Message = "Scan QR Code Sampah";
+            }
+            else
+            {
+                await dialogService.ShowMessageAsync("Scan Failed", "User Not Found");
             }
         }
         async Task ContainerScan()

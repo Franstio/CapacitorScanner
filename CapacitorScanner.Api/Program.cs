@@ -38,6 +38,7 @@ namespace CapacitorScanner.Api
             });
             builder.Services.AddHostedService<BinBackgroundService>();
             builder.Services.AddHostedService<TransactionBackgroundService>();
+            builder.Services.AddHostedService<StationBackgroundService>();
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment() || true)
